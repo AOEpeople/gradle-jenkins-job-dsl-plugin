@@ -16,6 +16,7 @@ class JobDslTestPlugin implements Plugin<Project> {
     void apply(Project project) {
 
         project.apply plugin: 'groovy'
+        project.apply plugin: 'nebula.provided-base'
 
         def extension = project.extensions.create('jobDsl', JobDslPluginExtension)
         extension.sourceDir 'src/jobs'
@@ -36,20 +37,17 @@ class JobDslTestPlugin implements Plugin<Project> {
             jobDslExtension
             jobDslTest
             jobDslRuntime.extendsFrom(jobDslExtension, jobDslTest)
-            providedCompile.extendsFrom(compile)
         }
-
-        project.sourceSets.main.compileClasspath = project.configurations.providedCompile
 
         project.dependencies {
             //TODO: Must this be the Jenkins Groovy version?
-            providedCompile 'org.codehaus.groovy:groovy-all:2.4.3'
+            provided 'org.codehaus.groovy:groovy-all:2.4.3'
         }
 
         project.afterEvaluate { proj ->
             proj.dependencies {
                 def extension = proj.extensions.getByType(JobDslPluginExtension)
-                providedCompile "org.jenkins-ci.plugins:job-dsl-core:${extension.version}"
+                provided "org.jenkins-ci.plugins:job-dsl-core:${extension.version}"
                 jobDslTest "com.aoe.gradle:jenkins-job-dsl-test-support:${Versions.pluginVersion()}"
 
                 // This is a hack because Gradle ignores the <type>jar</type> in the pom.xml of our test-support

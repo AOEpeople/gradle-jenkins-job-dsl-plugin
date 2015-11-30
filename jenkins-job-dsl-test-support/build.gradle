@@ -4,6 +4,9 @@ dependencies {
     compile "org.jenkins-ci.plugins:job-dsl-core:${versions.jobDsl}"
     compile "org.jenkins-ci.plugins:job-dsl:${versions.jobDsl}@jar"
     compile 'org.spockframework:spock-core:1.0-groovy-2.4'
+//    compile "org.jenkins-ci.main:jenkins-core:${versions.jenkins}"
+    // this pulls in a lot! of dependencies - but the above is not sufficient and I could not
+    // find out what dependencies are needed at minimum
     compile "org.jenkins-ci.main:jenkins-test-harness:${versions.jenkins}"
 }
 

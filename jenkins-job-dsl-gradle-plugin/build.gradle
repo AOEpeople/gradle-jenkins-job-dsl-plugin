@@ -2,6 +2,7 @@
 dependencies {
     compile gradleApi()
     compile localGroovy()
+    compile 'com.netflix.nebula:gradle-extra-configurations-plugin:3.0.3'
 }
 
 def generatedResourcesDir = "$buildDir/generated-resources/main"
