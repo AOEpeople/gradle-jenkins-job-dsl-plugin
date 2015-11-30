@@ -29,6 +29,10 @@ subprojects {
                 } else {
                     url 'https://extranet.aoe.com/artifactory/libs-release-local'
                 }
+                credentials {
+                    username = project.hasProperty('aoeRepoUsername') ? aoeRepoUsername : ''
+                    password = project.hasProperty('aoeRepoPassword') ? aoeRepoPassword : ''
+                }
             }
         }
     }
