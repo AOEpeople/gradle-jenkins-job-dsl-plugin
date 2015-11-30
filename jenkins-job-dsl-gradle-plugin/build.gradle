@@ -1,0 +1,34 @@
+
+dependencies {
+    compile gradleApi()
+    compile localGroovy()
+}
+
+def generatedResourcesDir = "$buildDir/generated-resources/main"
+
+sourceSets {
+    main {
+        output.dir(generatedResourcesDir, builtBy: 'generateResources')
+    }
+}
+
+task generateResources << {
+    project.file(generatedResourcesDir).mkdirs()
+
+    def props = new Properties()
+    props.pluginVersion = project.version.toString()
+    props.jobDsl = versions.jobDsl
+
+    def dir = project.file("${generatedResourcesDir}/com/aoe/gradle/jenkinsjobdsl")
+    dir.mkdirs()
+    def file = project.file("${dir}/dependencyVersions.properties")
+    file.withDataOutputStream { props.store(it, null) }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}

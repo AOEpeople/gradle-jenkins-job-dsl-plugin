@@ -1,0 +1,35 @@
+
+ext {
+    versions = [:]
+}
+
+versions.jenkins = '1.565'
+versions.jobDsl = '1.40'
+
+allprojects {
+    group = 'com.aoe.gradle'
+}
+
+subprojects {
+    apply plugin: 'groovy'
+    apply plugin: 'maven-publish'
+
+    repositories {
+        maven { url 'https://extranet.aoe.com/artifactory/remote-repos' }
+    }
+
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+
+    publishing {
+        repositories {
+            maven {
+                if (project.version.toString().endsWith('-SNAPSHOT')) {
+                    url 'https://extranet.aoe.com/artifactory/libs-snapshot-local'
+                } else {
+                    url 'https://extranet.aoe.com/artifactory/libs-release-local'
+                }
+            }
+        }
+    }
+}

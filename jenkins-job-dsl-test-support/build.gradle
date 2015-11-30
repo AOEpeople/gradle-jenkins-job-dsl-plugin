@@ -1,0 +1,19 @@
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.4.3'
+    compile "org.jenkins-ci.plugins:job-dsl-core:${versions.jobDsl}"
+    compile "org.jenkins-ci.plugins:job-dsl:${versions.jobDsl}@jar"
+    compile 'org.spockframework:spock-core:1.0-groovy-2.4'
+    compile "org.jenkins-ci.main:jenkins-test-harness:${versions.jenkins}"
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            pom.withXml {
+                asNode().dependencies.dependency.find { it.artifactId.text() == 'job-dsl' }?.appendNode('type', 'jar')
+            }
+        }
+    }
+}
