@@ -35,6 +35,7 @@ class JobDslTestPlugin implements Plugin<Project> {
         project.configurations {
             jobDslExtension
             jobDslTest
+            jobDslRuntime.extendsFrom(jobDslExtension, jobDslTest)
             providedCompile.extendsFrom(compile)
         }
 
@@ -50,7 +51,9 @@ class JobDslTestPlugin implements Plugin<Project> {
                 def extension = proj.extensions.getByType(JobDslPluginExtension)
                 providedCompile "org.jenkins-ci.plugins:job-dsl-core:${extension.version}"
                 jobDslTest "com.aoe.gradle:jenkins-job-dsl-test-support:${Versions.pluginVersion()}"
-                jobDslExtension "org.jenkins-ci.plugins:job-dsl:${Versions.jobDsl()}@jar"
+
+                // This is a hack because Gradle ignores the <type>jar</type> in the pom.xml of our test-support
+                jobDslRuntime "org.jenkins-ci.plugins:job-dsl:${extension.version}@jar"
             }
         }
     }
@@ -73,8 +76,7 @@ class JobDslTestPlugin implements Plugin<Project> {
 
         Task testDsl = project.task('testDsl', type: Test, dependsOn: unpackDslTests) {
             classpath = project.sourceSets.main.runtimeClasspath +
-                    project.configurations.jobDslTest +
-                    project.configurations.jobDslExtension
+                    project.configurations.jobDslRuntime
 
             testClassesDir = project.file(jobDslTestsDir)
         }
@@ -112,8 +114,7 @@ class JobDslTestPlugin implements Plugin<Project> {
 
         project.task('run', type: JavaExec, dependsOn: workspace) {
             classpath = project.sourceSets.main.runtimeClasspath +
-                    project.configurations.jobDslTest +
-                    project.configurations.jobDslExtension
+                    project.configurations.jobDslRuntime
 
             main = 'com.aoe.fraport.jenkins.Runner'
             workingDir = project.workspaceDir
@@ -130,8 +131,7 @@ class JobDslTestPlugin implements Plugin<Project> {
 
         project.task('runAll', type: JavaExec, dependsOn: workspace) {
             classpath = project.sourceSets.main.runtimeClasspath +
-                    project.configurations.jobDslTest +
-                    project.configurations.jobDslExtension
+                    project.configurations.jobDslRuntime
 
             main = 'com.aoe.fraport.jenkins.Runner'
             workingDir = project.workspaceDir
