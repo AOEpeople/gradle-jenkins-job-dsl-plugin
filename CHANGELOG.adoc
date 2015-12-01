@@ -1,4 +1,6 @@
 
+= 1.2.0 (not released)
+
 = 1.1.1 (2015-12-01)
 - Fix broken support for custom dsl extension points
 
