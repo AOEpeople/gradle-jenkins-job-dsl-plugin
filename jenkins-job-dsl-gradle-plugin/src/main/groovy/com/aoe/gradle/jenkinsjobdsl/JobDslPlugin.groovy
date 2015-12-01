@@ -26,6 +26,8 @@ class JobDslPlugin implements Plugin<Project> {
 
         addTestDslTask(project)
 
+        configureTests(project)
+
         addRunJobConfigurationTasks(project)
 
         addDependenciesManifestationTasks(project)
@@ -40,15 +42,16 @@ class JobDslPlugin implements Plugin<Project> {
         }
 
         project.dependencies {
-            //TODO: Must this be the Jenkins Groovy version?
-            provided 'org.codehaus.groovy:groovy-all:2.4.3'
+            provided "org.codehaus.groovy:groovy-all:${Versions.groovy()}"
+            jobDslTest "com.aoe.gradle:jenkins-job-dsl-test-support:${Versions.pluginVersion()}"
+
+            testCompile "org.spockframework:spock-core:${Versions.spock()}"
         }
 
         project.afterEvaluate { proj ->
             proj.dependencies {
                 def extension = proj.extensions.getByType(JobDslPluginExtension)
                 provided "org.jenkins-ci.plugins:job-dsl-core:${extension.version}"
-                jobDslTest "com.aoe.gradle:jenkins-job-dsl-test-support:${Versions.pluginVersion()}"
 
                 // This is a hack because Gradle ignores the <type>jar</type> in the pom.xml of our test-support
                 jobDslRuntime "org.jenkins-ci.plugins:job-dsl:${extension.version}@jar"
@@ -92,6 +95,10 @@ class JobDslPlugin implements Plugin<Project> {
         }
 
         project.tasks['check'].dependsOn testDsl
+    }
+
+    void configureTests(Project project) {
+
     }
 
     void addRunJobConfigurationTasks(Project project) {

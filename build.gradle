@@ -5,6 +5,8 @@ ext {
 
 versions.jenkins = '1.565'
 versions.jobDsl = '1.40'
+versions.groovy = '1.8.9'
+versions.spock = '0.7-groovy-1.8'
 
 allprojects {
     group = 'com.aoe.gradle'

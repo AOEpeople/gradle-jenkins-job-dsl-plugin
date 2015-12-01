@@ -5,6 +5,5 @@ import javaposse.jobdsl.dsl.MemoryJobManagement
 /**
  * Extend MemoryJobManagement with the ability to find ExtensionPoints
  */
-class ExtensionAwareJobManagement extends MemoryJobManagement implements WithExtensionAwareness {
-
-}
+@Mixin(WithExtensionAwareness)
+class ExtensionAwareJobManagement extends MemoryJobManagement { }

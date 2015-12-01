@@ -12,7 +12,8 @@ import java.util.logging.Logger
 /**
  * Extends FileJobManagement with the trait WithExtensionAwareness to support custom defined extensions.
  */
-class MyFileJobManagement extends FileJobManagement implements WithExtensionAwareness {
+@Mixin(WithExtensionAwareness)
+class MyFileJobManagement extends FileJobManagement {
 
     MyFileJobManagement(File root) {
         super(root)

@@ -19,6 +19,8 @@ task generateResources << {
     def props = new Properties()
     props.pluginVersion = project.version.toString()
     props.jobDsl = versions.jobDsl
+    props.groovy = versions.groovy
+    props.spock = versions.spock
 
     def dir = project.file("${generatedResourcesDir}/com/aoe/gradle/jenkinsjobdsl")
     dir.mkdirs()

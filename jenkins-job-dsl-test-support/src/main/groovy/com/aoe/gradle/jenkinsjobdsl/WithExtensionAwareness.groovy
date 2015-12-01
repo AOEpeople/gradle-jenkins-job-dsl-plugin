@@ -23,11 +23,10 @@ import static org.apache.commons.lang.StringUtils.join
  *
  * @author Carsten Lenz, AOE
  */
-trait WithExtensionAwareness {
+class WithExtensionAwareness {
     private static final Logger LOGGER = Logger.getLogger(WithExtensionAwareness.class.getName());
 
-    private final Map<Item, DslEnvironment> environments =
-            new HashMap<Item, DslEnvironment>();
+    private final Map<Item, DslEnvironment> environments = new HashMap<Item, DslEnvironment>()
 
     private DslEnvironment getSession(Item item) {
         DslEnvironment session = environments.get(item);

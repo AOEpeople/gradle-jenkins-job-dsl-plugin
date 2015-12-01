@@ -30,11 +30,15 @@ public class Versions {
         return props.getProperty("jobDsl");
     }
 
-    public static String testSupport() {
+    public static String pluginVersion() {
         return props.getProperty("pluginVersion");
     }
 
-    public static String pluginVersion() {
-        return props.getProperty("pluginVersion");
+    public static String groovy() {
+        return props.getProperty("groovy");
+    }
+
+    public static String spock() {
+        return props.getProperty("spock");
     }
 }
