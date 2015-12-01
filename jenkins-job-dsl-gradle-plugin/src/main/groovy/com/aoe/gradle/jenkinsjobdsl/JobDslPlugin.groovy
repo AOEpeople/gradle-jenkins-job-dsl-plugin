@@ -103,13 +103,16 @@ class JobDslPlugin implements Plugin<Project> {
         project.afterEvaluate { proj ->
             def extension = project.extensions.getByType(JobDslPluginExtension)
             proj.configure(workspace) {
-                proj.copy {
-                    from("${project.projectDir}") {
-                        for (String sourceDir in extension.sourceDirs) {
-                            include "${sourceDir}/**"
+                doLast {
+                    proj.workspaceDir.mkdirs()
+                    proj.copy {
+                        from("${project.projectDir}") {
+                            for (String sourceDir in extension.sourceDirs) {
+                                include "${sourceDir}/**"
+                            }
                         }
+                        into project.workspaceDir
                     }
-                    into project.workspaceDir
                 }
             }
         }
@@ -121,7 +124,7 @@ class JobDslPlugin implements Plugin<Project> {
             classpath = project.sourceSets.main.runtimeClasspath +
                     project.configurations.jobDslRuntime
 
-            main = 'com.aoe.fraport.jenkins.Runner'
+            main = 'com.aoe.gradle.jenkinsjobdsl.Runner'
             workingDir = project.workspaceDir
 
             args = [prop(project, 'jobFile')]
@@ -141,7 +144,7 @@ class JobDslPlugin implements Plugin<Project> {
             classpath = project.sourceSets.main.runtimeClasspath +
                     project.configurations.jobDslRuntime
 
-            main = 'com.aoe.fraport.jenkins.Runner'
+            main = 'com.aoe.gradle.jenkinsjobdsl.Runner'
             workingDir = project.workspaceDir
 
             def allJobFiles = project.fileTree('src/jobs') {
