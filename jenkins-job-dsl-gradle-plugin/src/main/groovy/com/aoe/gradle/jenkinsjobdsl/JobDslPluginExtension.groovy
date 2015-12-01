@@ -18,6 +18,10 @@ class JobDslPluginExtension {
      */
     List sourceDirs = []
 
+    void version(String version) {
+        this.version = version
+    }
+
     void sourceDir(String dir) {
         sourceDirs << dir
     }

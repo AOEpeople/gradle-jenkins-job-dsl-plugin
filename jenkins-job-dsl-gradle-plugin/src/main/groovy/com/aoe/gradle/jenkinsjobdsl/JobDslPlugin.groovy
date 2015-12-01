@@ -11,7 +11,7 @@ import org.gradle.api.tasks.testing.Test
 /**
  * @author Carsten Lenz, AOE
  */
-class JobDslTestPlugin implements Plugin<Project> {
+class JobDslPlugin implements Plugin<Project> {
 
     void apply(Project project) {
 
@@ -20,7 +20,7 @@ class JobDslTestPlugin implements Plugin<Project> {
 
         def extension = project.extensions.create('jobDsl', JobDslPluginExtension)
         extension.sourceDir 'src/jobs'
-        extension.version = Versions.jobDsl()
+        extension.version Versions.jobDsl()
 
         configureDependencies(project)
 
@@ -73,6 +73,9 @@ class JobDslTestPlugin implements Plugin<Project> {
         }
 
         Task testDsl = project.task('testDsl', type: Test, dependsOn: unpackDslTests) {
+            description = 'Executes all Job DSL scripts to test for errors'
+            group = 'Verification'
+
             classpath = project.sourceSets.main.runtimeClasspath +
                     project.configurations.jobDslRuntime
 
@@ -95,6 +98,7 @@ class JobDslTestPlugin implements Plugin<Project> {
         project.ext.workspaceDir = project.file('build/workspace')
 
         Task workspace = project.task('workspace')
+        workspace.description = 'Prepare a workspace directory for local Job DSL execution'
 
         project.afterEvaluate { proj ->
             def extension = project.extensions.getByType(JobDslPluginExtension)
@@ -111,6 +115,9 @@ class JobDslTestPlugin implements Plugin<Project> {
         }
 
         project.task('run', type: JavaExec, dependsOn: workspace) {
+            description = 'Run a specific DSL script given by -PjobFile=src/jobs/... and output generated config XMLs'
+            group = 'Execution'
+
             classpath = project.sourceSets.main.runtimeClasspath +
                     project.configurations.jobDslRuntime
 
@@ -128,6 +135,9 @@ class JobDslTestPlugin implements Plugin<Project> {
         }
 
         project.task('runAll', type: JavaExec, dependsOn: workspace) {
+            description = 'Run all DSL scripts and output generated config XMLs'
+            group = 'Execution'
+
             classpath = project.sourceSets.main.runtimeClasspath +
                     project.configurations.jobDslRuntime
 
@@ -143,6 +153,7 @@ class JobDslTestPlugin implements Plugin<Project> {
 
     public void addDependenciesManifestationTasks(Project project) {
         Task libs = project.task('libs', type: Copy) {
+            description = 'Copies all compile dependencies into a local folder (\'lib\' by default)'
             from project.configurations.compile
             into 'lib'
         }

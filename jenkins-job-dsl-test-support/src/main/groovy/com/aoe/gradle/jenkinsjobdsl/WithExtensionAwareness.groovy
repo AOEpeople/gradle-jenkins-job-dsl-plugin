@@ -5,11 +5,7 @@ import hudson.model.Items
 import javaposse.jobdsl.dsl.DslException
 import javaposse.jobdsl.dsl.Item
 import javaposse.jobdsl.dsl.helpers.ExtensibleContext
-import javaposse.jobdsl.plugin.ContextExtensionPoint
-import javaposse.jobdsl.plugin.DslEnvironment
-import javaposse.jobdsl.plugin.DslEnvironmentImpl
-import javaposse.jobdsl.plugin.DslExtensionMethod
-import javaposse.jobdsl.plugin.Messages
+import javaposse.jobdsl.plugin.*
 import net.java.sezpoz.Index
 import org.apache.commons.lang.ClassUtils
 
@@ -75,8 +71,16 @@ class Helper {
      * All DSL extension points (that means all classes with @Extension annotation and that are
      * subclasses of ContextExtensionPoint) get autodetected at runtime.
      */
-    static @Lazy
-    List<ContextExtensionPoint> DSL_EXTENSION_POINTS = {
+    private static List<ContextExtensionPoint> DSL_EXTENSION_POINTS
+
+    static List<ContextExtensionPoint> getExtensionsPoints() {
+        if (DSL_EXTENSION_POINTS == null) {
+            DSL_EXTENSION_POINTS = loadExtensionPoints()
+        }
+        DSL_EXTENSION_POINTS
+    }
+
+    private static List<ContextExtensionPoint> loadExtensionPoints() {
         println "Autodetecting DSL extension points..."
 
         Index<Extension, ContextExtensionPoint> index = Index.load(Extension, ContextExtensionPoint)
@@ -100,7 +104,7 @@ class Helper {
         println result.collect { "  ${it.getClass().name}" }.join("\n")
 
         Collections.unmodifiableList(result)
-    }()
+    }
 
     static Set<ExtensionPointMethod> findExtensionPoints(String name, Class<? extends ExtensibleContext> contextType,
                                                          Object... args) {
@@ -119,7 +123,7 @@ class Helper {
     private
     static List<ExtensionPointMethod> findCandidateMethods(String name, Class<? extends ExtensibleContext> contextType) {
         List<ExtensionPointMethod> result = new ArrayList<ExtensionPointMethod>();
-        for (ContextExtensionPoint extensionPoint : DSL_EXTENSION_POINTS) {
+        for (ContextExtensionPoint extensionPoint : getExtensionsPoints()) {
             for (Method method : extensionPoint.getClass().getMethods()) {
                 if (method.getName().equals(name)) {
                     DslExtensionMethod annotation = method.getAnnotation(DslExtensionMethod.class);
