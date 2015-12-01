@@ -150,7 +150,7 @@ class JobDslPlugin implements Plugin<Project> {
             def allJobFiles = project.fileTree('src/jobs') {
                 include '**/*.groovy'
             }
-            args = allJobFiles.files*.path.toList()
+            args = allJobFiles.files.collect { it.toURI().toURL() }
         }
     }
 
