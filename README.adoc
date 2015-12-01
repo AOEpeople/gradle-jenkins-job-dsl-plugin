@@ -1,0 +1,94 @@
+
+= Gradle Job DSL support plugin
+
+This plugin provides some support tasks for maintaining a Jenkins Job DSL Script
+project.
+
+* Local tests of DSL scripts
+** Ensures DSL scripts run successfully 
+** Supports external Job DSL extensions
+* Local generation of Jenkins config XML files Support for external dependencies
+  for usage in your DSL scripts
+
+== Configuration
+
+build.gradle:
+
+[source,gradle]
+----
+buildscript {
+    repositories {
+        maven { url 'https://extranet.aoe.com/artifactory/remote-repos' }
+        maven { url 'https://extranet.aoe.com/artifactory/libs-release' }
+    }
+    dependencies {
+        classpath 'com.aoe.gradle:jenkins-job-dsl-gradle-plugin:1.0.1'
+    }
+}
+
+apply plugin: 'com.aoe.jenkins-job-dsl'
+
+dependencies {
+    // Example for using additional Jenkins plugins that provide their own Job DSL support:
+    jobDslExtension 'com.aoe.jenkins:scm-push-trigger:1.1.0@jar'
+
+    // Example for using external libraries in the DSL scripts themselves:
+    compile 'com.google.guava:guava:18.0'
+}
+
+jobDsl {
+    // You can add additional directories to the Job DSL execution classpath
+    // Do this if you have files outside 'src/jobs' that are needed from your DSL scripts
+    // Default is only 'src/jobs'
+    sourceDir 'src/configs'
+
+    // Version of Job DSL you want to use
+    version = '1.40' // default
+}
+
+----
+
+== Structure
+
+Put your DSL scripts into `src/jobs`.
+
+If you have additional files that are not DSL scripts (like config) put them
+into their own base dir.  A good choice is `src/configs`.
+
+Then add this base dir to the `jobDsl` section in the `build.gradle`:
+[source,gradle]
+----
+jobDsl {
+    sourceDir 'src/configs'
+}
+----
+
+== Additional libraries
+
+You can use additional libraries by simply declaring them as a dependency in the
+`build.gradle`:
+
+[source,gradle]
+----
+dependencies {
+    compile 'com.aoe.groovy:groovy-guava:1.2.2'
+}
+----
+
+There is a task `libs` that copies all `compile` dependencies into the `lib`
+folder in the base dir (so put that into .gitignore). 
+
+This should be configured as an additional classpath in the seeder job
+in Jenkins (e.g. `lib/*.jar`). 
+
+== Usage
+
+* `gradle build` - Compile code in `src/main/groovy`, execute tests and copy
+  compile dependencies into `lib` folder (calls `libs` task)
+* `gradle testDsl` - Executes all DSL scripts to ensure no error. If everything
+  is fine Gradle will say `BUILD SUCCESSFUL`. Otherwise open the test report
+  from `build/reports/test/index.html`.
+* `gradle runAll` - Execute all DSL scripts or: 
+* `gradle run -PjobFile=src/jobs/myjob.groovy` - Generate only a specific
+  script. The results are available in `build/workspace`.
+
