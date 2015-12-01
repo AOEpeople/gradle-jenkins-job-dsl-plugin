@@ -5,19 +5,30 @@ import javaposse.jobdsl.dsl.FileJobManagement
 import javaposse.jobdsl.dsl.GeneratedItems
 import javaposse.jobdsl.dsl.GeneratedJob
 import javaposse.jobdsl.dsl.GeneratedView
+import javaposse.jobdsl.dsl.Item
 import javaposse.jobdsl.dsl.ScriptRequest
+import javaposse.jobdsl.dsl.helpers.ExtensibleContext
 
 import java.util.logging.Logger
 
 /**
- * Extends FileJobManagement with the trait WithExtensionAwareness to support custom defined extensions.
+ * Extend FileJobManagement with support for custom defined extensions.
  */
-@Mixin(WithExtensionAwareness)
 class MyFileJobManagement extends FileJobManagement {
+
+    ExtensionSupport extensionSupport = new ExtensionSupport()
 
     MyFileJobManagement(File root) {
         super(root)
     }
+
+    public Node callExtension(String name,
+                              Item item,
+                              Class<? extends ExtensibleContext> contextType,
+                              Object... args) {
+        extensionSupport.callExtension(name, item, contextType, args)
+    }
+
 }
 
 /**
