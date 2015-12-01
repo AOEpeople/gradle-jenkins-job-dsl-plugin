@@ -22,7 +22,7 @@ buildscript {
         maven { url 'https://extranet.aoe.com/artifactory/libs-release' }
     }
     dependencies {
-        classpath 'com.aoe.gradle:jenkins-job-dsl-gradle-plugin:1.0.1'
+        classpath 'com.aoe.gradle:jenkins-job-dsl-gradle-plugin:1.1.0'
     }
 }
 
