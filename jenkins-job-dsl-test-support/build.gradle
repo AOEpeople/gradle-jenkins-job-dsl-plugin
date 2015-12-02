@@ -10,13 +10,3 @@ dependencies {
     compile 'javax.servlet:servlet-api:2.4'
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            pom.withXml {
-                asNode().dependencies.dependency.find { it.artifactId.text() == 'job-dsl' }?.appendNode('type', 'jar')
-            }
-        }
-    }
-}

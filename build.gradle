@@ -1,4 +1,14 @@
 
+buildscript {
+    repositories {
+        maven { url 'https://extranet.aoe.com/artifactory/remote-repos' }
+    }
+    dependencies {
+        classpath 'com.netflix.nebula:nebula-publishing-plugin:4.4.4'
+        classpath 'com.netflix.nebula:nebula-release-plugin:3.1.0'
+    }
+}
+
 ext {
     versions = [:]
 }
@@ -8,13 +18,15 @@ versions.jobDsl = '1.40'
 versions.groovy = '1.8.9'
 versions.spock = '0.7-groovy-1.8'
 
+apply plugin: 'nebula.nebula-release'
+
 allprojects {
     group = 'com.aoe.gradle'
 }
 
 subprojects {
     apply plugin: 'groovy'
-    apply plugin: 'maven-publish'
+    apply plugin: 'nebula.maven-base-publish'
 
     repositories {
         maven { url 'https://extranet.aoe.com/artifactory/remote-repos' }
@@ -39,3 +51,5 @@ subprojects {
         }
     }
 }
+
+tasks.release.finalizedBy subprojects.collect { it.tasks.publish }

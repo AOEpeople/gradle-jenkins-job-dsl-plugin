@@ -28,10 +28,4 @@ task generateResources << {
     file.withDataOutputStream { props.store(it, null) }
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
-}
+
