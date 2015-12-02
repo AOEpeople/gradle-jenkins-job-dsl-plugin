@@ -164,7 +164,7 @@ class JobDslPlugin implements Plugin<Project> {
     public void addDependenciesManifestationTasks(Project project) {
         Task libs = project.task('libs', type: Copy) {
             description = 'Copies all compile dependencies into a local folder (\'lib\' by default)'
-            from project.configurations.compile
+            from(project.configurations.compile - project.configurations.provided)
             into 'lib'
         }
 
