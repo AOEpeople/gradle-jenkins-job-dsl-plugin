@@ -6,15 +6,13 @@ Follow these instructions to make a release
 == Steps
 
 * Ensure you have the latest code: `git checkout master && git pull`
-* Edit `gradle.properties` to strip `-SNAPSHOT` from version
+* Optionally check version: `gradlew releaseCheck -Prelease.stage=final -Prelease.scope=<major|minor|patch>
 * Update `CHANGELOG.adoc`, set the release date
 * Update the version in `README.adoc`
 * Ensure everything is checked in: `git commit -am "releasing 1.1.0"`
-* Tag the source as it is: `git tag -a 1.1.0 -m "Gradle Job DSL plugin 1.1.0"`
 * Build the code: `gradlew clean build`
-* Deploy: `gradlew publish`
-* Increment the version in `gradle.properties` and append `-SNAPSHOT`
+* Deploy: `gradlew final -Prelease.scope=<major|minor|patch>`
 * Update `CHANGELOG.md`, add the next version
 * Commit the updated version number: `git commit -am "bumping version"`
-* Push the two new commit and the tag back to Repo: `git push && git push --tags`
+* Push the new version `git push`
 * Tell everyone the news :)
