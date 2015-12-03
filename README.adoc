@@ -22,7 +22,7 @@ buildscript {
         maven { url 'https://extranet.aoe.com/artifactory/libs-release' }
     }
     dependencies {
-        classpath 'com.aoe.gradle:jenkins-job-dsl-gradle-plugin:1.1.1'
+        classpath 'com.aoe.gradle:jenkins-job-dsl-gradle-plugin:1.1.3'
     }
 }
 
@@ -37,10 +37,11 @@ dependencies {
 }
 
 jobDsl {
-    // You can add additional directories to the Job DSL execution classpath
-    // Do this if you have files outside 'src/jobs' that are needed from your DSL scripts
-    // Default is only 'src/jobs'
-    sourceDir 'src/configs'
+    // Base directory where the DSL scripts reside
+    sourceDir 'src/jobs'
+
+    // Aditional non-DSL-script resources needed from the DSL scripts
+    resourceDir 'src/configs'
 
     // Version of Job DSL you want to use
     version = '1.40' // default
@@ -50,18 +51,21 @@ jobDsl {
 
 == Structure
 
-Put your DSL scripts into `src/jobs`.
+Put your DSL scripts into a directory under root like e.g. `src/jobs`.
 
 If you have additional files that are not DSL scripts (like config) put them
 into their own base dir.  A good choice is `src/configs`.
 
-Then add this base dir to the `jobDsl` section in the `build.gradle`:
+Then add these base dirs to the `jobDsl` section in the `build.gradle`:
 [source,gradle]
 ----
 jobDsl {
-    sourceDir 'src/configs'
+    sourceDir 'src/jobs'
+    resourceDir 'src/configs'
 }
 ----
+
+It is possible to have multiple sourceDirs and resourceDirs.
 
 == Additional libraries
 
