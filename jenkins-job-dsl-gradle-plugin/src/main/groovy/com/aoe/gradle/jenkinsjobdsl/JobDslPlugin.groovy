@@ -19,14 +19,11 @@ class JobDslPlugin implements Plugin<Project> {
         project.apply plugin: 'nebula.provided-base'
 
         def extension = project.extensions.create('jobDsl', JobDslPluginExtension)
-        extension.sourceDir 'src/jobs'
         extension.version Versions.jobDsl()
 
         configureDependencies(project)
 
         addTestDslTask(project)
-
-        configureTests(project)
 
         addRunJobConfigurationTasks(project)
 
@@ -87,18 +84,17 @@ class JobDslPlugin implements Plugin<Project> {
         project.afterEvaluate { proj ->
             def extension = proj.extensions.getByType(JobDslPluginExtension)
             proj.configure(testDsl) {
-                for (String sourceDir in extension.sourceDirs) {
-                    inputs.dir sourceDir
+                for (String dir in extension.allDirs) {
+                    inputs.dir dir
                 }
-                systemProperties([jobSourceDirs: extension.sourceDirs.join(File.pathSeparator)])
+                systemProperties([
+                        jobSourceDirs: extension.sourceDirs.join(File.pathSeparator),
+                        jobResourceDirs: extension.resourceDirs.join(File.pathSeparator)
+                ])
             }
         }
 
         project.tasks['check'].dependsOn testDsl
-    }
-
-    void configureTests(Project project) {
-
     }
 
     void addRunJobConfigurationTasks(Project project) {
@@ -114,7 +110,7 @@ class JobDslPlugin implements Plugin<Project> {
                     proj.workspaceDir.mkdirs()
                     proj.copy {
                         from("${project.projectDir}") {
-                            for (String sourceDir in extension.sourceDirs) {
+                            for (String sourceDir in extension.allDirs) {
                                 include "${sourceDir}/**"
                             }
                         }
@@ -144,7 +140,7 @@ class JobDslPlugin implements Plugin<Project> {
             }
         }
 
-        project.task('runAll', type: JavaExec, dependsOn: workspace) {
+        Task runAll = project.task('runAll', type: JavaExec, dependsOn: workspace) {
             description = 'Run all DSL scripts and output generated config XMLs'
             group = 'Execution'
 
@@ -153,11 +149,19 @@ class JobDslPlugin implements Plugin<Project> {
 
             main = 'com.aoe.gradle.jenkinsjobdsl.Runner'
             workingDir = project.workspaceDir
+        }
 
-            def allJobFiles = project.fileTree('src/jobs') {
-                include '**/*.groovy'
+        project.afterEvaluate { proj ->
+            proj.configure(runAll) {
+                def extension = project.extensions.getByType(JobDslPluginExtension)
+                def includeGroovyFiles = project.fileTree(project.workspaceDir) {
+                    include '**/*.groovy'
+                }
+                def allJobFiles = extension.sourceDirs.collectMany {
+                    includeGroovyFiles.from("${project.workspaceDir}/${it}").files.toList()
+                }
+                args = allJobFiles.collect { it.toURI().toURL() }
             }
-            args = allJobFiles.files.collect { it.toURI().toURL() }
         }
     }
 

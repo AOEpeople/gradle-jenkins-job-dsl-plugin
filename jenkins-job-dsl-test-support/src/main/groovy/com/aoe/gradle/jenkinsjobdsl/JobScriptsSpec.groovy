@@ -12,21 +12,30 @@ import spock.lang.Unroll
  */
 class JobScriptsSpec extends Specification {
 
+    static final String SOURCE_DIR_PROP = System.getProperty('jobSourceDirs', '')
+    static final String RESOURCE_DIR_PROP = System.getProperty('jobResourceDirs', '')
+
+    static final List<File> SOURCE_DIRS = toDirs(SOURCE_DIR_PROP)
+    static final List<File> RESOURCE_DIRS = toDirs(RESOURCE_DIR_PROP)
+
+    def allDirs = (SOURCE_DIRS + RESOURCE_DIRS)
+
+    static List<File> toDirs(String separatedListOfDirs) {
+        separatedListOfDirs
+                .split(File.pathSeparator)
+                .toList()
+                .collect { new File(it) }
+                .findAll { it.exists() }
+    }
+
     @Unroll
     void 'test script #file.name'(File file) {
         given:
         MemoryJobManagement jm = new ExtensionAwareJobManagement()
 
-        def sourceDirsProp = System.getProperty('jobSourceDirs', '')
-
-        def sourceDirs = sourceDirsProp.split(File.pathSeparator).toList()
-
-        sourceDirs.each { String dir ->
-            def dirPath = new File(dir)
-            if (dirPath.exists()) {
-                dirPath.eachFileRecurse(FileType.FILES) {
-                    jm.availableFiles << [(it.path): it.text]
-                }
+        allDirs.each { File dir ->
+            dir.eachFileRecurse(FileType.FILES) {
+                jm.availableFiles << [(it.path): it.text]
             }
         }
 
@@ -45,8 +54,10 @@ class JobScriptsSpec extends Specification {
 
     static List<File> getJobFiles() {
         List<File> files = []
-        new File('src/jobs').eachFileRecurse(FileType.FILES) {
-            if (it =~ /.*?\.groovy/) files << it
+        SOURCE_DIRS.each {
+            it.eachFileRecurse(FileType.FILES) {
+                if (it =~ /.*?\.groovy/) files << it
+            }
         }
         files
     }

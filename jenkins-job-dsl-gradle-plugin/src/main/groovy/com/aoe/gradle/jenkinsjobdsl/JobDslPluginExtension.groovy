@@ -1,5 +1,4 @@
 package com.aoe.gradle.jenkinsjobdsl
-
 /**
  * @author Carsten Lenz, AOE
  */
@@ -13,10 +12,17 @@ class JobDslPluginExtension {
     String version
 
     /**
-     * The source dirs to include in the classpath for running the DSL scripts.
-     * Default with JobDslPlugin : 'src/jobs'
+     * The source dirs containing the DSL scripts.
+     * Default: []
      */
     List sourceDirs = []
+
+    /**
+     * Additional resources that must be available when the DSL scripts execute but
+     * are not DSL scripts themselves (e.g. configuration, files for jobs)
+     * Default: []
+     */
+    List resourceDirs = []
 
     void version(String version) {
         this.version = version
@@ -24,6 +30,14 @@ class JobDslPluginExtension {
 
     void sourceDir(String dir) {
         sourceDirs << dir
+    }
+
+    void resourceDir(String dir) {
+        resourceDirs << dir
+    }
+
+    List<String> getAllDirs() {
+        sourceDirs + resourceDirs
     }
 }
 
