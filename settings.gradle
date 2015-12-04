@@ -1,5 +1,5 @@
 
-rootProject.name = 'root'
+rootProject.name = 'gradle-jenkins-job-dsl-plugin'
 
 include 'jenkins-job-dsl-test-support'
 include 'jenkins-job-dsl-gradle-plugin'
