@@ -6,6 +6,7 @@ buildscript {
     dependencies {
         classpath 'com.netflix.nebula:nebula-publishing-plugin:4.4.4'
         classpath 'com.netflix.nebula:nebula-release-plugin:3.1.0'
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.2'
     }
 }
 
@@ -18,6 +19,7 @@ versions.jobDsl = '1.40'
 versions.groovy = '1.8.9'
 versions.spock = '0.7-groovy-1.8'
 
+apply plugin: 'org.asciidoctor.convert'
 apply plugin: 'nebula.nebula-release'
 
 allprojects {

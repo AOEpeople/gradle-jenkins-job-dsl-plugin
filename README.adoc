@@ -1,4 +1,3 @@
-
 = Gradle Job DSL support plugin
 
 This plugin provides some support tasks for maintaining a Jenkins Job DSL Script
