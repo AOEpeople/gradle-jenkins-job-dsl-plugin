@@ -1,12 +1,12 @@
 
 buildscript {
     repositories {
-        maven { url 'https://extranet.aoe.com/artifactory/remote-repos' }
+        jcenter()
     }
     dependencies {
         classpath 'com.netflix.nebula:nebula-publishing-plugin:4.4.4'
         classpath 'com.netflix.nebula:nebula-release-plugin:3.1.0'
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.2'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.4'
     }
 }
 
@@ -19,7 +19,6 @@ versions.jobDsl = '1.40'
 versions.groovy = '1.8.9'
 versions.spock = '0.7-groovy-1.8'
 
-apply plugin: 'org.asciidoctor.convert'
 apply plugin: 'nebula.nebula-release'
 
 allprojects {
@@ -29,29 +28,15 @@ allprojects {
 subprojects {
     apply plugin: 'groovy'
     apply plugin: 'nebula.maven-base-publish'
+    apply from: "${rootDir}/gradle/bintrayUpload.gradle"
 
     repositories {
-        maven { url 'https://extranet.aoe.com/artifactory/remote-repos' }
+        jcenter()
+        maven { url 'http://repo.jenkins-ci.org/releases/' }
     }
 
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'
-
-    publishing {
-        repositories {
-            maven {
-                if (project.version.toString().endsWith('-SNAPSHOT')) {
-                    url 'https://extranet.aoe.com/artifactory/libs-snapshot-local'
-                } else {
-                    url 'https://extranet.aoe.com/artifactory/libs-release-local'
-                }
-                credentials {
-                    username = project.hasProperty('aoeRepoUsername') ? aoeRepoUsername : ''
-                    password = project.hasProperty('aoeRepoPassword') ? aoeRepoPassword : ''
-                }
-            }
-        }
-    }
 }
 
 tasks.release.finalizedBy subprojects.collect { it.tasks.publish }

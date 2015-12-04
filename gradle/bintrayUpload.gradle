@@ -1,0 +1,30 @@
+
+apply plugin: 'com.jfrog.bintray'
+
+bintray {
+    if (project.hasProperty('bintrayUser')) {
+        user = project.property('bintrayUser')
+        key = project.property('bintrayKey')
+    }
+    publications = ['nebula']
+    dryRun = false
+    publish = true
+    pkg {
+        repo = 'gradle-plugins'
+        userOrg = 'aoepeople'
+        name = project.name
+        desc = project.description
+        websiteUrl = 'https://github.com/AOEpeople/gradle-jenkins-job-dsl-plugin'
+        issueTrackerUrl = 'https://github.com/AOEpeople/gradle-jenkins-job-dsl-plugin/issues'
+        vcsUrl = 'https://github.com/AOEpeople/gradle-jenkins-job-dsl-plugin'
+        licenses = ['MIT']
+        labels = ['gradle', 'jenkins', 'job-dsl', 'groovy']
+        publicDownloadNumbers = true
+        attributes = [:]
+        version {
+            name = project.version
+            vcsTag = "v${project.version}"
+            attributes = [:]
+        }
+    }
+}
