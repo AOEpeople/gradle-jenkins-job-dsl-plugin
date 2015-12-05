@@ -94,3 +94,24 @@ in Jenkins (e.g. `lib/*.jar`).
 * `gradle run -PjobFile=src/jobs/myjob.groovy` - Generate only a specific
   script. The results are available in `build/workspace`.
 
+== Jenkins Seeder Job Configuration
+
+This is the recommended configuration of the seeder job on Jenkins. Adapt where
+needed. 
+
+First configure a _Invoke Gradle script_ step with the tasks `clean build`.
+This will build everything, run the tests and download additional libraries (if
+used) to the local `lib` directory.
+
+Next add a step _Process Job DSLs_. Configure it for using the DSL scripts in
+your repo (_Look on filesystem_). If you store them like in the above example in `src/jobs` configure
+the step for using `src/jobs/\**/*.groovy`.
+
+In the _Advanced_ section you should set up an additional classpath to include
+your (optional) local support code and / or libraries:
+
+----
+build/classes/main
+lib/*.jar
+----
+
