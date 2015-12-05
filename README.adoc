@@ -6,8 +6,8 @@ project.
 * Local tests of DSL scripts
 ** Ensures DSL scripts run successfully 
 ** Supports external Job DSL extensions
-* Local generation of Jenkins config XML files Support for external dependencies
-  for usage in your DSL scripts
+* Local generation of Jenkins config XML files
+** Support for external dependencies for usage in your DSL scripts
 
 == Configuration
 
