@@ -1,13 +1,16 @@
 = Gradle Job DSL support plugin
 
-This plugin provides some support tasks for maintaining a Jenkins Job DSL Script
-project.
+This plugin provides some support tasks for maintaining a
+https://github.com/jenkinsci/job-dsl-plugin[Jenkins Job DSL Script]
+repository/project.
+
+== Features
 
 * Local tests of DSL scripts
-** Ensures DSL scripts run successfully 
-** Supports external Job DSL extensions
+** Ensures DSL scripts execute without error
+** Supports external Job DSL extensions from Jenkins plugins
 * Local generation of Jenkins config XML files
-** Support for external dependencies for usage in your DSL scripts
+* Support for external library dependencies for use in your DSL scripts
 
 == Configuration
 
@@ -97,7 +100,9 @@ in Jenkins (e.g. `lib/*.jar`).
 == Jenkins Seeder Job Configuration
 
 This is the recommended configuration of the seeder job on Jenkins. Adapt where
-needed. 
+needed. For a general introduction refer to the
+https://github.com/jenkinsci/job-dsl-plugin/wiki/Tutorial---Using-the-Jenkins-Job-DSL[tutorial
+at the Job DSL site]
 
 First configure a _Invoke Gradle script_ step with the tasks `clean build`.
 This will build everything, run the tests and download additional libraries (if
