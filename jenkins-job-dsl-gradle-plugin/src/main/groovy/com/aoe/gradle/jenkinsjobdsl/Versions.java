@@ -26,19 +26,19 @@ public class Versions {
 
     }
 
-    public static String jobDsl() {
+    public static String getJobDsl() {
         return props.getProperty("jobDsl");
     }
 
-    public static String pluginVersion() {
+    public static String getPluginVersion() {
         return props.getProperty("pluginVersion");
     }
 
-    public static String groovy() {
+    public static String getGroovy() {
         return props.getProperty("groovy");
     }
 
-    public static String spock() {
+    public static String getSpock() {
         return props.getProperty("spock");
     }
 }

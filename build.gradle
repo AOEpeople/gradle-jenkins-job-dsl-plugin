@@ -28,6 +28,8 @@ allprojects {
 subprojects {
     apply plugin: 'groovy'
     apply plugin: 'nebula.maven-base-publish'
+    apply plugin: 'nebula.javadoc-jar'
+    apply plugin: 'nebula.source-jar'
     apply from: "${rootDir}/gradle/bintrayUpload.gradle"
 
     repositories {
@@ -39,4 +41,4 @@ subprojects {
     targetCompatibility = '1.8'
 }
 
-tasks.release.finalizedBy subprojects.collect { it.tasks.publish }
+tasks.release.finalizedBy subprojects.collect { it.tasks.bintrayUpload }

@@ -9,6 +9,9 @@ import org.gradle.api.tasks.StopExecutionException
 import org.gradle.api.tasks.testing.Test
 
 /**
+ * Gradle Plugin that sets up a project for authoring
+ * and testing Jenkins Job DSL scripts.
+ *
  * @author Carsten Lenz, AOE
  */
 class JobDslPlugin implements Plugin<Project> {
@@ -19,7 +22,7 @@ class JobDslPlugin implements Plugin<Project> {
         project.apply plugin: 'nebula.provided-base'
 
         def extension = project.extensions.create('jobDsl', JobDslPluginExtension)
-        extension.version Versions.jobDsl()
+        extension.version Versions.jobDsl
 
         configureDependencies(project)
 
@@ -39,10 +42,8 @@ class JobDslPlugin implements Plugin<Project> {
         }
 
         project.dependencies {
-            provided "org.codehaus.groovy:groovy-all:${Versions.groovy()}"
-            jobDslTest "com.aoe.gradle:jenkins-job-dsl-test-support:${Versions.pluginVersion()}"
-
-            testCompile "org.spockframework:spock-core:${Versions.spock()}"
+            provided "org.codehaus.groovy:groovy-all:${Versions.groovy}"
+            jobDslTest "com.aoe.gradle:jenkins-job-dsl-test-support:${Versions.pluginVersion}"
         }
 
         project.afterEvaluate { proj ->

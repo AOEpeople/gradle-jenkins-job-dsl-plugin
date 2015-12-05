@@ -1,5 +1,8 @@
 package com.aoe.gradle.jenkinsjobdsl
+
 /**
+ * DSL to configure the project for the JobDslPlugin
+ *
  * @author Carsten Lenz, AOE
  */
 class JobDslPluginExtension {

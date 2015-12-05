@@ -32,7 +32,8 @@ class MyFileJobManagement extends FileJobManagement {
 }
 
 /**
- * Able to run from the command line to test out. Leverage FileJobManagement
+ * Executes the given DSL scripts from the command line and generates
+ * the config XMLs. Leverage FileJobManagement
  */
 class Runner {
     private static final Logger LOG = Logger.getLogger(Runner.name)
