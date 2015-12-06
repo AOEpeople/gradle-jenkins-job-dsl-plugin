@@ -27,6 +27,14 @@ class JobDslPluginExtension {
      */
     List resourceDirs = []
 
+    /**
+     * Should default repositories be added?
+     * Currently jcenter() and jenkins-release repo are added which should
+     * be sufficient for resolving all dependencies that are needed for the
+     * features of this plugin. Set to false to add own repos or proxies.
+     */
+    Boolean addRepositories = true
+
     void version(String version) {
         this.version = version
     }

@@ -1,5 +1,6 @@
 
 = 1.3.0 (not released)
+- Optionally add default repositories
 
 = 1.2.1 (2015-12-05)
 - No functionality changed - added docs and released to bintray for the first

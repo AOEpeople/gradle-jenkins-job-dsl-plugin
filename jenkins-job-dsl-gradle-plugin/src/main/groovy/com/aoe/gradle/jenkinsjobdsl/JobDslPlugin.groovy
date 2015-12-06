@@ -47,14 +47,22 @@ class JobDslPlugin implements Plugin<Project> {
         }
 
         project.afterEvaluate { proj ->
+            def extension = proj.extensions.getByType(JobDslPluginExtension)
+
             proj.dependencies {
-                def extension = proj.extensions.getByType(JobDslPluginExtension)
                 provided "org.jenkins-ci.plugins:job-dsl-core:${extension.version}"
 
                 // This is a hack because Gradle ignores the <type>jar</type> in the pom.xml of our test-support
                 jobDslRuntime "org.jenkins-ci.plugins:job-dsl:${extension.version}@jar"
             }
+            if (extension.addRepositories) {
+                proj.repositories {
+                    jcenter()
+                    maven { url 'http://repo.jenkins-ci.org/releases/' }
+                }
+            }
         }
+
     }
 
     void addTestDslTask(Project project) {
