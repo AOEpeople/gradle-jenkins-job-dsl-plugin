@@ -162,14 +162,16 @@ class JobDslPlugin implements Plugin<Project> {
 
         project.afterEvaluate { proj ->
             proj.configure(runAll) {
-                def extension = project.extensions.getByType(JobDslPluginExtension)
-                def includeGroovyFiles = project.fileTree(project.workspaceDir) {
-                    include '**/*.groovy'
+                doFirst {
+                    def extension = project.extensions.getByType(JobDslPluginExtension)
+                    def includeGroovyFiles = project.fileTree(project.workspaceDir) {
+                        include '**/*.groovy'
+                    }
+                    def allJobFiles = extension.sourceDirs.collectMany {
+                        includeGroovyFiles.from("${project.workspaceDir}/${it}").files.toList()
+                    }
+                    args = allJobFiles.collect { it.toURI().toURL() }
                 }
-                def allJobFiles = extension.sourceDirs.collectMany {
-                    includeGroovyFiles.from("${project.workspaceDir}/${it}").files.toList()
-                }
-                args = allJobFiles.collect { it.toURI().toURL() }
             }
         }
     }
