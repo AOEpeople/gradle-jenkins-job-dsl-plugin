@@ -1,6 +1,7 @@
 
-= 1.3.0 (not released)
+= 1.3.0 (2016-02-02)
 - Optionally add default repositories
+- Fix: on first runAll no job configs are created - thanks @luhuec
 
 = 1.2.1 (2015-12-05)
 - No functionality changed - added docs and released to bintray for the first
