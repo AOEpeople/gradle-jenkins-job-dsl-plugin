@@ -92,13 +92,13 @@ in Jenkins (e.g. `lib/*.jar`).
 
 == Usage
 
-* `gradle build` - Compile code in `src/main/groovy`, execute tests and copy
+* `gradlew build` - Compile code in `src/main/groovy`, execute tests and copy
   compile dependencies into `lib` folder (calls `libs` task)
-* `gradle testDsl` - Executes all DSL scripts to ensure no error. If everything
+* `gradlew testDsl` - Executes all DSL scripts to ensure no error. If everything
   is fine Gradle will say `BUILD SUCCESSFUL`. Otherwise open the test report
   from `build/reports/test/index.html`.
-* `gradle runAll` - Execute all DSL scripts or: 
-* `gradle run -PjobFile=src/jobs/myjob.groovy` - Generate only a specific
+* `gradlew runAll` - Execute all DSL scripts or:
+* `gradlew run -PjobFile=src/jobs/myjob.groovy` - Generate only a specific
   script. The results are available in `build/workspace`.
 
 == Jenkins Seeder Job Configuration
