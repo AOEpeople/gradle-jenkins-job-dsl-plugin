@@ -7,7 +7,6 @@ import javaposse.jobdsl.dsl.GeneratedJob
 import javaposse.jobdsl.dsl.GeneratedView
 import javaposse.jobdsl.dsl.Item
 import javaposse.jobdsl.dsl.ScriptRequest
-import javaposse.jobdsl.dsl.helpers.ExtensibleContext
 
 import java.util.logging.Logger
 
@@ -24,7 +23,7 @@ class MyFileJobManagement extends FileJobManagement {
 
     public Node callExtension(String name,
                               Item item,
-                              Class<? extends ExtensibleContext> contextType,
+                              Class<?> contextType,
                               Object... args) {
         extensionSupport.callExtension(name, item, contextType, args)
     }

@@ -4,7 +4,6 @@ import hudson.Extension
 import hudson.model.Items
 import javaposse.jobdsl.dsl.DslException
 import javaposse.jobdsl.dsl.Item
-import javaposse.jobdsl.dsl.helpers.ExtensibleContext
 import javaposse.jobdsl.plugin.*
 import net.java.sezpoz.Index
 import org.apache.commons.lang.ClassUtils
@@ -38,7 +37,7 @@ class ExtensionSupport {
     }
 
     public Node callExtension(String name, Item item,
-                              Class<? extends ExtensibleContext> contextType, Object... args) {
+                              Class<?> contextType, Object... args) {
         Set<Helper.ExtensionPointMethod> candidates = Helper.findExtensionPoints(name, contextType, args)
         if (candidates.isEmpty()) {
             LOGGER.fine(
@@ -105,7 +104,7 @@ class Helper {
         Collections.unmodifiableList(result)
     }
 
-    static Set<ExtensionPointMethod> findExtensionPoints(String name, Class<? extends ExtensibleContext> contextType,
+    static Set<ExtensionPointMethod> findExtensionPoints(String name, Class<?> contextType,
                                                          Object... args) {
         Class[] parameterTypes = ClassUtils.toClass(args)
         Set<ExtensionPointMethod> candidates = new HashSet<ExtensionPointMethod>()
@@ -120,7 +119,7 @@ class Helper {
     }
 
     private
-    static List<ExtensionPointMethod> findCandidateMethods(String name, Class<? extends ExtensibleContext> contextType) {
+    static List<ExtensionPointMethod> findCandidateMethods(String name, Class<?> contextType) {
         List<ExtensionPointMethod> result = new ArrayList<ExtensionPointMethod>()
         for (ContextExtensionPoint extensionPoint : getExtensionsPoints()) {
             for (Method method : extensionPoint.getClass().getMethods()) {
