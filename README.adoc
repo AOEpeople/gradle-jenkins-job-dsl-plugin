@@ -23,7 +23,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.aoe.gradle:jenkins-job-dsl-gradle-plugin:1.3.0'
+        classpath 'com.aoe.gradle:jenkins-job-dsl-gradle-plugin:1.4.0'
     }
 }
 
@@ -45,7 +45,7 @@ jobDsl {
     resourceDir 'src/configs'
 
     // Version of Job DSL you want to use
-    version = '1.40' // default
+    version = '1.44' // default
 
     // By default jcenter and jenkins-release are added as repositories
     // If you don't like this set it to false
