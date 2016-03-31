@@ -23,7 +23,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.aoe.gradle:jenkins-job-dsl-gradle-plugin:1.4.0'
+        classpath 'com.aoe.gradle:jenkins-job-dsl-gradle-plugin:1.4.1'
     }
 }
 

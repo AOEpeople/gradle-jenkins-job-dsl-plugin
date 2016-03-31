@@ -1,3 +1,5 @@
+= 1.4.1 (2016-03-31)
+- Fix broken support for DSL extensions
 
 = 1.4.0 (2016-03-31)
 - Support for Job DSL 1.44 (new default version)
