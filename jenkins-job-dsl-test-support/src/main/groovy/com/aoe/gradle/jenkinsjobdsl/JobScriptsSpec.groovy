@@ -32,6 +32,7 @@ class JobScriptsSpec extends Specification {
     void 'test script #file.name'(File file) {
         given:
         MemoryJobManagement jm = new ExtensionAwareJobManagement()
+        jm.parameters << System.getenv() // this mimics the behaviour of the plugin in jenkins
 
         allDirs.each { File dir ->
             dir.eachFileRecurse(FileType.FILES) {
