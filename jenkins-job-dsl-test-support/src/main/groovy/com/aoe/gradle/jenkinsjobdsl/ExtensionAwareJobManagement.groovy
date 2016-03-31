@@ -8,7 +8,7 @@ import javaposse.jobdsl.dsl.MemoryJobManagement
  */
 class ExtensionAwareJobManagement extends MemoryJobManagement {
 
-    ExtensionSupport extensionSupport = new ExtensionSupport()
+    ExtensionSupport extensionSupport = new ExtensionSupport(this)
 
     public Node callExtension(String name,
                               Item item,

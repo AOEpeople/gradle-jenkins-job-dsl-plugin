@@ -52,7 +52,6 @@ job("simple-job") {
 
         repositories {
             mavenLocal()
-            maven { url 'https://extranet.aoe.com/artifactory/libs-release' }
             mavenCentral()
             jcenter()
         }

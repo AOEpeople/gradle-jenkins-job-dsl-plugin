@@ -4,6 +4,7 @@ import hudson.Extension
 import hudson.model.Items
 import javaposse.jobdsl.dsl.DslException
 import javaposse.jobdsl.dsl.Item
+import javaposse.jobdsl.dsl.JobManagement
 import javaposse.jobdsl.plugin.*
 import net.java.sezpoz.Index
 import org.apache.commons.lang.ClassUtils
@@ -25,12 +26,18 @@ import static org.apache.commons.lang.StringUtils.join
 class ExtensionSupport {
     private static final Logger LOGGER = Logger.getLogger(ExtensionSupport.class.getName())
 
+    private final JobManagement jobManagement
+
     private final Map<Item, DslEnvironment> environments = new HashMap<Item, DslEnvironment>()
+
+    ExtensionSupport(JobManagement jobManagement) {
+        this.jobManagement = jobManagement
+    }
 
     private DslEnvironment getSession(Item item) {
         DslEnvironment session = environments.get(item)
         if (session == null) {
-            session = new DslEnvironmentImpl()
+            session = new DslEnvironmentImpl(jobManagement, item)
             environments.put(item, session)
         }
         return session
