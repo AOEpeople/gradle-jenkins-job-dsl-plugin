@@ -15,7 +15,7 @@ import java.util.logging.Logger
  */
 class MyFileJobManagement extends FileJobManagement {
 
-    ExtensionSupport extensionSupport = new ExtensionSupport()
+    ExtensionSupport extensionSupport = new ExtensionSupport(this)
 
     MyFileJobManagement(File root) {
         super(root)

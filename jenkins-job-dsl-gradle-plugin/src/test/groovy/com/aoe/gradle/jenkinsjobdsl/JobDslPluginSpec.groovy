@@ -35,16 +35,6 @@ job("simple-job") {
     }
 }
 """
-        def pluginClasspathResource = getClass().classLoader.findResource("plugin-classpath.txt")
-        if (pluginClasspathResource == null) {
-            throw new IllegalStateException("Did not find plugin classpath resource, run `testClasses` build task.")
-        }
-
-        pluginClasspath = pluginClasspathResource.readLines().collect { new File(it) }
-    }
-
-    def "executing testDsl"() {
-        given:
         buildFile << """
         plugins {
             id 'com.aoe.jenkins-job-dsl'
@@ -60,11 +50,20 @@ job("simple-job") {
             sourceDir 'src/jobs'
         }
 
-        testDsl {
-            environment(HAMSDI: 'bamsdi')
+        ['run', 'runAll', 'testDsl'].each {
+            tasks[it].environment(HAMSDI: 'bamsdi')
         }
-        """.stripIndent()
 
+        """.stripIndent()
+        def pluginClasspathResource = getClass().classLoader.findResource("plugin-classpath.txt")
+        if (pluginClasspathResource == null) {
+            throw new IllegalStateException("Did not find plugin classpath resource, run `testClasses` build task.")
+        }
+
+        pluginClasspath = pluginClasspathResource.readLines().collect { new File(it) }
+    }
+
+    def "executing testDsl"() {
         when:
         def result = GradleRunner.create()
                 .withProjectDir(testProjectDir.root)
@@ -75,5 +74,29 @@ job("simple-job") {
         then:
 //        result.output.contains('')
         result.task(':testDsl').outcome == SUCCESS
+    }
+
+    def "executing runAll"() {
+        when:
+        def result = GradleRunner.create()
+                .withProjectDir(testProjectDir.root)
+                .withArguments('runAll')
+                .withPluginClasspath(pluginClasspath)
+                .build()
+
+        then:
+        result.task(':runAll').outcome == SUCCESS
+    }
+
+    def "executing run"() {
+        when:
+        def result = GradleRunner.create()
+                .withProjectDir(testProjectDir.root)
+                .withArguments('run', '-PjobFile=src/jobs/sample.groovy')
+                .withPluginClasspath(pluginClasspath)
+                .build()
+
+        then:
+        result.task(':run').outcome == SUCCESS
     }
 }
