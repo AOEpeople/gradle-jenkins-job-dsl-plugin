@@ -10,3 +10,6 @@ dependencies {
     compile 'javax.servlet:servlet-api:2.4'
 }
 
+test {
+    systemProperties(jobSourceDirs: 'src/testjobs')
+}
