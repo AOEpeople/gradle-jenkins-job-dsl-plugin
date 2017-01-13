@@ -5,6 +5,7 @@ dependencies {
     compile "org.jenkins-ci.plugins:job-dsl:${versions.jobDsl}@jar"
     compile "org.spockframework:spock-core:${versions.spock}"
     compile "org.jenkins-ci.main:jenkins-core:${versions.jenkins}"
+    compile 'org.jenkins-ci.main:jenkins-test-harness:2.12'
 
     // needed optional dependency of of jenkins-core
     compile 'javax.servlet:servlet-api:2.4'

@@ -16,7 +16,6 @@ class JobDslPluginSpec extends Specification {
 
     File buildFile
     File jobsDir
-    List<File> pluginClasspath
 
     def setup() {
         buildFile = testProjectDir.newFile('build.gradle')
@@ -55,12 +54,6 @@ job("simple-job") {
         }
 
         """.stripIndent()
-        def pluginClasspathResource = getClass().classLoader.findResource("plugin-classpath.txt")
-        if (pluginClasspathResource == null) {
-            throw new IllegalStateException("Did not find plugin classpath resource, run `testClasses` build task.")
-        }
-
-        pluginClasspath = pluginClasspathResource.readLines().collect { new File(it) }
     }
 
     def "executing testDsl"() {
@@ -68,7 +61,7 @@ job("simple-job") {
         def result = GradleRunner.create()
                 .withProjectDir(testProjectDir.root)
                 .withArguments('testDsl')
-                .withPluginClasspath(pluginClasspath)
+                .withPluginClasspath()
                 .build()
 
         then:
@@ -81,7 +74,7 @@ job("simple-job") {
         def result = GradleRunner.create()
                 .withProjectDir(testProjectDir.root)
                 .withArguments('runAll')
-                .withPluginClasspath(pluginClasspath)
+                .withPluginClasspath()
                 .build()
 
         then:
@@ -93,7 +86,7 @@ job("simple-job") {
         def result = GradleRunner.create()
                 .withProjectDir(testProjectDir.root)
                 .withArguments('run', '-PjobFile=src/jobs/sample.groovy')
-                .withPluginClasspath(pluginClasspath)
+                .withPluginClasspath()
                 .build()
 
         then:
