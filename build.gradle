@@ -14,10 +14,10 @@ ext {
     versions = [:]
 }
 
-versions.jenkins = '1.580'
-versions.jobDsl = '1.44'
-versions.groovy = '1.8.9'
-versions.spock = '0.7-groovy-1.8'
+versions.jenkins = '2.14'
+versions.jobDsl = '1.58'
+versions.groovy = '2.4.7'
+versions.spock = '1.0-groovy-2.4'
 
 apply plugin: 'nebula.nebula-release'
 
