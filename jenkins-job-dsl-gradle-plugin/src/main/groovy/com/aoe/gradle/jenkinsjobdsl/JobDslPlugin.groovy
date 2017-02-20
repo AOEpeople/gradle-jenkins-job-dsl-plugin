@@ -3,6 +3,8 @@ package com.aoe.gradle.jenkinsjobdsl
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
+import org.gradle.api.artifacts.ResolvedArtifact
+import org.gradle.api.artifacts.ResolvedDependency
 import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.StopExecutionException
@@ -16,7 +18,10 @@ import org.gradle.api.tasks.testing.Test
  */
 class JobDslPlugin implements Plugin<Project> {
 
+    File jobDslTestsDir
+
     void apply(Project project) {
+        jobDslTestsDir = project.file("${project.buildDir}/jobDslTests")
 
         project.apply plugin: 'groovy'
         project.apply plugin: 'nebula.provided-base'
@@ -33,7 +38,7 @@ class JobDslPlugin implements Plugin<Project> {
         addDependenciesManifestationTasks(project)
     }
 
-    public void configureDependencies(Project project) {
+    void configureDependencies(Project project) {
 
         project.configurations {
             jobDslExtension
@@ -62,18 +67,43 @@ class JobDslPlugin implements Plugin<Project> {
                 }
             }
         }
-
     }
 
     void addTestDslTask(Project project) {
-        def jobDslTestsDir = "${project.buildDir}/tmp/jobDslTests"
+        Task resolveJobDslExtensions = project.task('resolveJobDslExtensions', type: Copy) {
+            from project.configurations.jobDslExtension
+            into project.file("${project.buildDir}/resolveJobDslExtensions/test-dependencies")
+            include '*.hpi'
+            include '*.jpi'
+            def mapping = [:]
+
+            doFirst {
+                project.configurations.jobDslExtension.resolvedConfiguration.resolvedArtifacts.each {
+                    mapping[it.file.name] = "${it.name}.${it.extension}"
+                }
+            }
+            rename { mapping[it] }
+
+            doLast {
+                List<String> baseNames = source*.name.collect { mapping[it] }.collect { it[0..it.lastIndexOf('.') - 1] }
+                new File(destinationDir, 'index').setText(baseNames.join('\n'), 'UTF-8')
+            }
+        }
 
         Task unpackDslTests = project.task('unpackDslTests') {
             doLast {
                 def resolvedDependencies = project.configurations.jobDslTest.resolvedConfiguration.firstLevelModuleDependencies
                 def jarFiles = []
-                resolvedDependencies.each { it.moduleArtifacts.each { jarFiles << it.file } }
-                assert jarFiles.size() == 1
+                resolvedDependencies.each { ResolvedDependency dep ->
+                    dep.moduleArtifacts.each { ResolvedArtifact artifact ->
+                        jarFiles << artifact.file
+                    }
+                }
+
+                assert jarFiles.size() == 1, "The configuration 'jobDslTest' is expected to have " +
+                        "only one artifact but has ${jarFiles.size()}. You should not modify this " +
+                        "configuration. Please file a bug if you think this is an error."
+
                 project.copy {
                     from project.zipTree(jarFiles[0])
                     into jobDslTestsDir
@@ -81,15 +111,17 @@ class JobDslPlugin implements Plugin<Project> {
             }
         }
 
-        Task testDsl = project.task('testDsl', type: Test, dependsOn: unpackDslTests) {
+        Task testDsl = project.task('testDsl', type: Test, dependsOn: [unpackDslTests, resolveJobDslExtensions]) {
             description = 'Executes all Job DSL scripts to test for errors'
             group = 'Verification'
 
             classpath = project.sourceSets.main.runtimeClasspath +
-                    project.configurations.jobDslRuntime
+                    project.configurations.jobDslRuntime +
+                    project.files("${project.buildDir}/resolveJobDslExtensions")
 
             testClassesDir = project.file(jobDslTestsDir)
         }
+
         project.afterEvaluate { proj ->
             def extension = proj.extensions.getByType(JobDslPluginExtension)
             proj.configure(testDsl) {
@@ -98,7 +130,9 @@ class JobDslPlugin implements Plugin<Project> {
                 }
                 systemProperties([
                         jobSourceDirs: extension.sourceDirs.join(File.pathSeparator),
-                        jobResourceDirs: extension.resourceDirs.join(File.pathSeparator)
+                        jobResourceDirs: extension.resourceDirs.join(File.pathSeparator),
+                        // set build directory for Jenkins test harness, JENKINS-26331
+                        buildDirectory: proj.buildDir.absolutePath
                 ])
             }
         }

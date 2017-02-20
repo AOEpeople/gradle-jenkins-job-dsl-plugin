@@ -10,7 +10,7 @@ import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
 /**
  * @author Carsten Lenz, AOE
  */
-class JobDslPluginSpec extends Specification {
+class EnvironmentPassingSpec extends Specification {
     @Rule
     def final TemporaryFolder testProjectDir = new TemporaryFolder()
 
