@@ -11,13 +11,14 @@ import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
  * @author Carsten Lenz, AOE
  */
 class EnvironmentPassingSpec extends Specification {
-    @Rule
-    def final TemporaryFolder testProjectDir = new TemporaryFolder()
+//    @Rule
+    final TemporaryFolder testProjectDir = new TemporaryFolder()
 
     File buildFile
     File jobsDir
 
     def setup() {
+        testProjectDir.create()
         buildFile = testProjectDir.newFile('build.gradle')
         jobsDir = testProjectDir.newFolder('src', 'jobs')
         def sample = new File(jobsDir, 'sample.groovy')
@@ -49,9 +50,7 @@ job("simple-job") {
             sourceDir 'src/jobs'
         }
 
-        ['run', 'runAll', 'testDsl'].each {
-            tasks[it].environment(HAMSDI: 'bamsdi')
-        }
+        testDsl.environment(HAMSDI: 'bamsdi')
 
         """.stripIndent()
     }
@@ -69,27 +68,4 @@ job("simple-job") {
         result.task(':testDsl').outcome == SUCCESS
     }
 
-    def "executing runAll"() {
-        when:
-        def result = GradleRunner.create()
-                .withProjectDir(testProjectDir.root)
-                .withArguments('runAll')
-                .withPluginClasspath()
-                .build()
-
-        then:
-        result.task(':runAll').outcome == SUCCESS
-    }
-
-    def "executing run"() {
-        when:
-        def result = GradleRunner.create()
-                .withProjectDir(testProjectDir.root)
-                .withArguments('run', '-PjobFile=src/jobs/sample.groovy')
-                .withPluginClasspath()
-                .build()
-
-        then:
-        result.task(':run').outcome == SUCCESS
-    }
 }

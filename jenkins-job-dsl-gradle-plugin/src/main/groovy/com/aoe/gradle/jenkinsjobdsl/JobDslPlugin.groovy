@@ -33,8 +33,6 @@ class JobDslPlugin implements Plugin<Project> {
 
         addTestDslTask(project)
 
-        addRunJobConfigurationTasks(project)
-
         addDependenciesManifestationTasks(project)
     }
 
@@ -140,77 +138,7 @@ class JobDslPlugin implements Plugin<Project> {
         project.tasks['check'].dependsOn testDsl
     }
 
-    void addRunJobConfigurationTasks(Project project) {
-        project.ext.workspaceDir = project.file('build/workspace')
-
-        Task workspace = project.task('workspace')
-        workspace.description = 'Prepare a workspace directory for local Job DSL execution'
-
-        project.afterEvaluate { proj ->
-            def extension = project.extensions.getByType(JobDslPluginExtension)
-            proj.configure(workspace) {
-                doLast {
-                    proj.workspaceDir.mkdirs()
-                    proj.copy {
-                        from("${project.projectDir}") {
-                            for (String sourceDir in extension.allDirs) {
-                                include "${sourceDir}/**"
-                            }
-                        }
-                        into project.workspaceDir
-                    }
-                }
-            }
-        }
-
-        project.task('run', type: JavaExec, dependsOn: workspace) {
-            description = 'Run a specific DSL script given by -PjobFile=src/jobs/... and output generated config XMLs'
-            group = 'Execution'
-
-            classpath = project.sourceSets.main.runtimeClasspath +
-                    project.configurations.jobDslRuntime
-
-            main = 'com.aoe.gradle.jenkinsjobdsl.Runner'
-            workingDir = project.workspaceDir
-
-            args = [prop(project, 'jobFile')]
-
-            doFirst {
-                if (!prop(project, 'jobFile')) {
-                    project.logger.error 'Please provide the project parameter "jobFile" like "gradle run -PjobFile=src/jobs/bla.groovy"'
-                    throw new StopExecutionException()
-                }
-            }
-        }
-
-        Task runAll = project.task('runAll', type: JavaExec, dependsOn: workspace) {
-            description = 'Run all DSL scripts and output generated config XMLs'
-            group = 'Execution'
-
-            classpath = project.sourceSets.main.runtimeClasspath +
-                    project.configurations.jobDslRuntime
-
-            main = 'com.aoe.gradle.jenkinsjobdsl.Runner'
-            workingDir = project.workspaceDir
-        }
-
-        project.afterEvaluate { proj ->
-            proj.configure(runAll) {
-                doFirst {
-                    def extension = project.extensions.getByType(JobDslPluginExtension)
-                    def includeGroovyFiles = project.fileTree(project.workspaceDir) {
-                        include '**/*.groovy'
-                    }
-                    def allJobFiles = extension.sourceDirs.collectMany {
-                        includeGroovyFiles.from("${project.workspaceDir}/${it}").files.toList()
-                    }
-                    args = allJobFiles.collect { it.toURI().toURL() }
-                }
-            }
-        }
-    }
-
-    public void addDependenciesManifestationTasks(Project project) {
+    void addDependenciesManifestationTasks(Project project) {
         Task libs = project.task('libs', type: Copy) {
             description = 'Copies all compile dependencies into a local folder (\'lib\' by default)'
             from(project.configurations.compile - project.configurations.provided)

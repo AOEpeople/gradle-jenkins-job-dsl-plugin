@@ -11,7 +11,7 @@ import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
  * @author Carsten Lenz, AOE
  */
 class DslExtensionsSpec extends Specification {
-    //@Rule
+    //@Rule //todo
     final TemporaryFolder testProjectDir = new TemporaryFolder(new File('build'))
 
     File buildFile
@@ -100,29 +100,5 @@ job("\$basePath/grails-example-build") {
         then:
 //        result.output.contains('')
         result.task(':testDsl').outcome == SUCCESS
-    }
-
-    def "executing runAll"() {
-        when:
-        def result = GradleRunner.create()
-                .withProjectDir(testProjectDir.root)
-                .withArguments('runAll')
-                .withPluginClasspath()
-                .build()
-
-        then:
-        result.task(':runAll').outcome == SUCCESS
-    }
-
-    def "executing run"() {
-        when:
-        def result = GradleRunner.create()
-                .withProjectDir(testProjectDir.root)
-                .withArguments('run', '-PjobFile=src/jobs/sample.groovy')
-                .withPluginClasspath()
-                .build()
-
-        then:
-        result.task(':run').outcome == SUCCESS
     }
 }
