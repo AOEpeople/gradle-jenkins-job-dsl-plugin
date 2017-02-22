@@ -23,8 +23,6 @@ class JobScriptsSpec extends Specification {
     static final List<File> SOURCE_DIRS = toDirs(SOURCE_DIR_PROP)
     static final List<File> RESOURCE_DIRS = toDirs(RESOURCE_DIR_PROP)
 
-    def allDirs = (SOURCE_DIRS + RESOURCE_DIRS)
-
     static List<File> toDirs(String separatedListOfDirs) {
         separatedListOfDirs
                 .split(File.pathSeparator)

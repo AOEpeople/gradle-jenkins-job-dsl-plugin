@@ -11,14 +11,14 @@ import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
  * @author Carsten Lenz, AOE
  */
 class DslExtensionsSpec extends Specification {
-    //@Rule //todo
+
+    @Rule
     final TemporaryFolder testProjectDir = new TemporaryFolder(new File('build'))
 
     File buildFile
     File jobsDir
 
     def setup() {
-        testProjectDir.create()
         buildFile = testProjectDir.newFile('build.gradle')
         jobsDir = testProjectDir.newFolder('src', 'jobs')
         def sample = new File(jobsDir, 'sample.groovy')
@@ -68,8 +68,8 @@ job("\$basePath/grails-example-build") {
         }
         
         dependencies {
-            jobDslRuntime 'org.jenkins-ci.plugins:structs:1.2@jar'
-            jobDslRuntime 'org.jenkins-ci.plugins:cloudbees-folder:5.0@jar'
+            jobDslTestRuntime 'org.jenkins-ci.plugins:structs:1.2@jar'
+            jobDslTestRuntime 'org.jenkins-ci.plugins:cloudbees-folder:5.0@jar'
             jobDslExtension 'org.jenkins-ci.plugins:ghprb:1.31.4'
             jobDslExtension 'com.coravy.hudson.plugins.github:github:1.19.0'
             jobDslExtension 'org.jenkins-ci.plugins:cloudbees-folder:5.0'
@@ -79,7 +79,7 @@ job("\$basePath/grails-example-build") {
             sourceDir 'src/jobs'
         }
         
-        testDsl {
+        jobDslTest {
             doFirst {
               classpath.each {
                 println "\${it.path}"
@@ -89,16 +89,16 @@ job("\$basePath/grails-example-build") {
         """.stripIndent()
     }
 
-    def "executing testDsl"() {
+    def "executing jobDslTest"() {
         when:
         def result = GradleRunner.create()
                 .withProjectDir(testProjectDir.root)
-                .withArguments('testDsl')
+                .withArguments('jobDslTest')
                 .withPluginClasspath()
                 .build()
 
         then:
 //        result.output.contains('')
-        result.task(':testDsl').outcome == SUCCESS
+        result.task(':jobDslTest').outcome == SUCCESS
     }
 }

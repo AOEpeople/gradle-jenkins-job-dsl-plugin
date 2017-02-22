@@ -11,14 +11,13 @@ import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
  * @author Carsten Lenz, AOE
  */
 class EnvironmentPassingSpec extends Specification {
-//    @Rule
+    @Rule
     final TemporaryFolder testProjectDir = new TemporaryFolder()
 
     File buildFile
     File jobsDir
 
     def setup() {
-        testProjectDir.create()
         buildFile = testProjectDir.newFile('build.gradle')
         jobsDir = testProjectDir.newFolder('src', 'jobs')
         def sample = new File(jobsDir, 'sample.groovy')
@@ -50,22 +49,22 @@ job("simple-job") {
             sourceDir 'src/jobs'
         }
 
-        testDsl.environment(HAMSDI: 'bamsdi')
+        jobDslTest.environment(HAMSDI: 'bamsdi')
 
         """.stripIndent()
     }
 
-    def "executing testDsl"() {
+    def "executing jobDslTest"() {
         when:
         def result = GradleRunner.create()
                 .withProjectDir(testProjectDir.root)
-                .withArguments('testDsl')
+                .withArguments('jobDslTest')
                 .withPluginClasspath()
                 .build()
 
         then:
 //        result.output.contains('')
-        result.task(':testDsl').outcome == SUCCESS
+        result.task(':jobDslTest').outcome == SUCCESS
     }
 
 }

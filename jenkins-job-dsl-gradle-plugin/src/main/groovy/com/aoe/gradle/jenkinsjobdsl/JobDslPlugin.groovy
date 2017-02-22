@@ -40,13 +40,13 @@ class JobDslPlugin implements Plugin<Project> {
 
         project.configurations {
             jobDslExtension
-            jobDslTest
-            jobDslRuntime.extendsFrom(jobDslExtension, jobDslTest)
+            jobDslTestSupport
+            jobDslTestRuntime.extendsFrom(jobDslExtension, jobDslTestSupport)
         }
 
         project.dependencies {
             provided "org.codehaus.groovy:groovy-all:${Versions.groovy}"
-            jobDslTest "com.aoe.gradle:jenkins-job-dsl-test-support:${Versions.pluginVersion}"
+            jobDslTestSupport "com.aoe.gradle:jenkins-job-dsl-test-support:${Versions.pluginVersion}"
         }
 
         project.afterEvaluate { proj ->
@@ -56,7 +56,7 @@ class JobDslPlugin implements Plugin<Project> {
                 provided "org.jenkins-ci.plugins:job-dsl-core:${extension.version}"
 
                 // This is a hack because Gradle ignores the <type>jar</type> in the pom.xml of our test-support
-                jobDslRuntime "org.jenkins-ci.plugins:job-dsl:${extension.version}@jar"
+                jobDslTestRuntime "org.jenkins-ci.plugins:job-dsl:${extension.version}@jar"
             }
             if (extension.addRepositories) {
                 proj.repositories {
@@ -90,7 +90,7 @@ class JobDslPlugin implements Plugin<Project> {
 
         Task unpackDslTests = project.task('unpackDslTests') {
             doLast {
-                def resolvedDependencies = project.configurations.jobDslTest.resolvedConfiguration.firstLevelModuleDependencies
+                def resolvedDependencies = project.configurations.jobDslTestSupport.resolvedConfiguration.firstLevelModuleDependencies
                 def jarFiles = []
                 resolvedDependencies.each { ResolvedDependency dep ->
                     dep.moduleArtifacts.each { ResolvedArtifact artifact ->
@@ -98,7 +98,7 @@ class JobDslPlugin implements Plugin<Project> {
                     }
                 }
 
-                assert jarFiles.size() == 1, "The configuration 'jobDslTest' is expected to have " +
+                assert jarFiles.size() == 1, "The configuration 'jobDslTestSupport' is expected to have " +
                         "only one artifact but has ${jarFiles.size()}. You should not modify this " +
                         "configuration. Please file a bug if you think this is an error."
 
@@ -109,12 +109,12 @@ class JobDslPlugin implements Plugin<Project> {
             }
         }
 
-        Task testDsl = project.task('testDsl', type: Test, dependsOn: [unpackDslTests, resolveJobDslExtensions]) {
+        Task jobDslTest = project.task('jobDslTest', type: Test, dependsOn: [unpackDslTests, resolveJobDslExtensions]) {
             description = 'Executes all Job DSL scripts to test for errors'
             group = 'Verification'
 
             classpath = project.sourceSets.main.runtimeClasspath +
-                    project.configurations.jobDslRuntime +
+                    project.configurations.jobDslTestRuntime +
                     project.files("${project.buildDir}/resolveJobDslExtensions")
 
             testClassesDir = project.file(jobDslTestsDir)
@@ -122,7 +122,7 @@ class JobDslPlugin implements Plugin<Project> {
 
         project.afterEvaluate { proj ->
             def extension = proj.extensions.getByType(JobDslPluginExtension)
-            proj.configure(testDsl) {
+            proj.configure(jobDslTest) {
                 for (String dir in extension.allDirs) {
                     inputs.dir dir
                 }
@@ -135,7 +135,7 @@ class JobDslPlugin implements Plugin<Project> {
             }
         }
 
-        project.tasks['check'].dependsOn testDsl
+        project.tasks['check'].dependsOn jobDslTest
     }
 
     void addDependenciesManifestationTasks(Project project) {
