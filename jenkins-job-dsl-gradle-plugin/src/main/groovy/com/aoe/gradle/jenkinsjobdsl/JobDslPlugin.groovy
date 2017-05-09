@@ -31,6 +31,8 @@ class JobDslPlugin implements Plugin<Project> {
 
         configureDependencies(project)
 
+        addJobSourceSet(project)
+
         addTestDslTask(project)
 
         addDependenciesManifestationTasks(project)
@@ -62,6 +64,36 @@ class JobDslPlugin implements Plugin<Project> {
                 proj.repositories {
                     jcenter()
                     maven { url 'http://repo.jenkins-ci.org/releases/' }
+                }
+            }
+        }
+    }
+
+    def addJobSourceSet(Project project) {
+        project.sourceSets {
+            jobs {
+                groovy {
+                    compileClasspath += main.compileClasspath
+                }
+                compileClasspath += project.sourceSets.main.output
+                runtimeClasspath += project.sourceSets.main.output
+            }
+        }
+
+        project.afterEvaluate { proj ->
+            def extension = proj.extensions.getByType(JobDslPluginExtension)
+            proj.sourceSets {
+                jobs {
+                    groovy {
+                        for (String dir : extension.sourceDirs) {
+                            srcDir dir
+                        }
+                    }
+                    resources {
+                        for (String dir : extension.resourceDirs) {
+                            srcDir dir
+                        }
+                    }
                 }
             }
         }
