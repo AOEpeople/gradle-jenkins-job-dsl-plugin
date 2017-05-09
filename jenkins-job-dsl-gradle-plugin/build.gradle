@@ -1,5 +1,16 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "com.gradle.publish:plugin-publish-plugin:0.9.7"
+    }
+}
 
 apply plugin: 'java-gradle-plugin'
+apply plugin: 'com.gradle.plugin-publish'
 
 dependencies {
     compile localGroovy()
@@ -37,9 +48,24 @@ task generateResources {
 
 gradlePlugin {
     plugins {
-        simplePlugin {
+        jobDslPlugin {
             id = "com.aoe.jenkins-job-dsl"
             implementationClass = "com.aoe.gradle.jenkinsjobdsl.JobDslPlugin"
+        }
+    }
+}
+
+pluginBundle {
+    // These settings are set for the whole plugin bundle
+    website = 'https://github.com/AOEpeople/gradle-jenkins-job-dsl-plugin'
+    vcsUrl = 'https://github.com/AOEpeople/gradle-jenkins-job-dsl-plugin'
+    description = 'This plugin provides some support tasks for maintaining a Jenkins Job DSL Script repository/project'
+    tags = ['jobdsl', 'jenkins', 'job-dsl']
+
+    plugins {
+        jobDslPlugin {
+            id = 'com.aoe.jenkins-job-dsl'
+            displayName = 'Gradle Jenkins Job DSL support plugin'
         }
     }
 }

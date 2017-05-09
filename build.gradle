@@ -21,10 +21,6 @@ versions.spock = '1.0-groovy-2.4'
 
 apply plugin: 'nebula.nebula-release'
 
-allprojects {
-    group = 'com.aoe.gradle'
-}
-
 subprojects {
     apply plugin: 'groovy'
     apply plugin: 'nebula.maven-base-publish'
