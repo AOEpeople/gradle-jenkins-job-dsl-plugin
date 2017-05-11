@@ -1,3 +1,6 @@
+= 2.0.1 (2017-05-11)
+- Fix: Used wrong version of test support lib
+
 = 2.0.0 (2017-05-11)
 - Removed `run`, `runAll` tasks and renamed `testDsl` to `jobDslTests`
 - Changed test execution mechanism to use a Jenkins test harness
