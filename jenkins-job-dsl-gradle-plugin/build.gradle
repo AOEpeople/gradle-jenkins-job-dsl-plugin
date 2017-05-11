@@ -21,7 +21,9 @@ dependencies {
     }
 }
 
-def generatedResourcesDir = "$buildDir/generated-resources/main"
+ext {
+    generatedResourcesDir = "$buildDir/generated-resources/main"
+}
 
 sourceSets {
     main {
@@ -30,6 +32,11 @@ sourceSets {
 }
 
 task generateResources {
+    def dir = project.file("${generatedResourcesDir}/com/aoe/gradle/jenkinsjobdsl")
+    def file = project.file("${dir}/dependencyVersions.properties")
+
+    outputs.files file
+
     doLast {
         project.file(generatedResourcesDir).mkdirs()
 
@@ -39,9 +46,7 @@ task generateResources {
         props.groovy = versions.groovy
         props.spock = versions.spock
 
-        def dir = project.file("${generatedResourcesDir}/com/aoe/gradle/jenkinsjobdsl")
         dir.mkdirs()
-        def file = project.file("${dir}/dependencyVersions.properties")
         file.withDataOutputStream { props.store(it, null) }
     }
 }
