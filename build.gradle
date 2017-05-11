@@ -15,9 +15,9 @@ ext {
 }
 
 versions.jenkins = '2.14'
-versions.jobDsl = '1.58'
-versions.groovy = '2.4.7'
-versions.spock = '1.0-groovy-2.4'
+versions.jobDsl = '1.63'
+versions.groovy = '2.4.11'
+versions.spock = '1.1-groovy-2.4'
 
 apply plugin: 'nebula.nebula-release'
 

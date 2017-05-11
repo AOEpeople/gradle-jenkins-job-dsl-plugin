@@ -60,8 +60,8 @@ class JobDslPlugin implements Plugin<Project> {
                 // Sadly because of the .hpi or .jpi pom packages we have to redundantly define the correct job-dsl deps
                 jobDslTestRuntime "org.jenkins-ci.plugins:job-dsl:${extension.version}@jar"
                 jobDslTestRuntime "org.jenkins-ci.plugins:job-dsl:${extension.version}"
-                jobDslTestRuntime 'org.jenkins-ci.plugins:structs:1.2@jar'
-                jobDslTestRuntime 'org.jenkins-ci.plugins:cloudbees-folder:5.0@jar'
+                jobDslTestRuntime 'org.jenkins-ci.plugins:structs:1.6@jar'
+                jobDslTestRuntime 'org.jenkins-ci.plugins:cloudbees-folder:6.0.4@jar'
             }
 
             if (extension.addRepositories) {
