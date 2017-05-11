@@ -69,11 +69,9 @@ job("\$basePath/grails-example-build") {
         }
         
         dependencies {
-            jobDslTestRuntime 'org.jenkins-ci.plugins:structs:1.2@jar'
-            jobDslTestRuntime 'org.jenkins-ci.plugins:cloudbees-folder:5.0@jar'
-            jobDslExtension 'org.jenkins-ci.plugins:ghprb:1.31.4'
-            jobDslExtension 'com.coravy.hudson.plugins.github:github:1.19.0'
-            jobDslExtension 'org.jenkins-ci.plugins:cloudbees-folder:5.0'
+            jenkinsPlugin 'org.jenkins-ci.plugins:ghprb:1.31.4'
+            jenkinsPlugin 'com.coravy.hudson.plugins.github:github:1.19.0'
+            jenkinsPlugin 'org.jenkins-ci.plugins:cloudbees-folder:5.0'
         }
 
         jobDsl {
@@ -90,6 +88,20 @@ job("\$basePath/grails-example-build") {
         """.stripIndent()
     }
 
+    def "printing dependencies"() {
+        when:
+        def result = GradleRunner.create()
+                .withProjectDir(testProjectDir.root)
+                .withArguments('dependencies')
+                .withPluginClasspath()
+                .build()
+
+        new File('build/dependencies.txt').text = result.output
+
+        then:
+        result.task(':dependencies').outcome == SUCCESS // it really should
+    }
+
     def "executing jobDslTest"() {
         when:
         def result = GradleRunner.create()
@@ -99,7 +111,6 @@ job("\$basePath/grails-example-build") {
                 .build()
 
         then:
-//        result.output.contains('')
         result.task(':jobDslTest').outcome == SUCCESS
     }
 }

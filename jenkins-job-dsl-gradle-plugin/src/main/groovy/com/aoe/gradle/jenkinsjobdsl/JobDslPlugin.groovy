@@ -41,9 +41,9 @@ class JobDslPlugin implements Plugin<Project> {
     void configureDependencies(Project project) {
 
         project.configurations {
-            jobDslExtension
+            jenkinsPlugin
             jobDslTestSupport
-            jobDslTestRuntime.extendsFrom(jobDslExtension, jobDslTestSupport)
+            jobDslTestRuntime.extendsFrom(jobDslTestSupport)
         }
 
         project.dependencies {
@@ -57,9 +57,13 @@ class JobDslPlugin implements Plugin<Project> {
             proj.dependencies {
                 provided "org.jenkins-ci.plugins:job-dsl-core:${extension.version}"
 
-                // This is a hack because Gradle ignores the <type>jar</type> in the pom.xml of our test-support
+                // Sadly because of the .hpi or .jpi pom packages we have to redundantly define the correct job-dsl deps
                 jobDslTestRuntime "org.jenkins-ci.plugins:job-dsl:${extension.version}@jar"
+                jobDslTestRuntime "org.jenkins-ci.plugins:job-dsl:${extension.version}"
+                jobDslTestRuntime 'org.jenkins-ci.plugins:structs:1.2@jar'
+                jobDslTestRuntime 'org.jenkins-ci.plugins:cloudbees-folder:5.0@jar'
             }
+
             if (extension.addRepositories) {
                 proj.repositories {
                     jcenter()
@@ -100,15 +104,15 @@ class JobDslPlugin implements Plugin<Project> {
     }
 
     void addTestDslTask(Project project) {
-        Task resolveJobDslExtensions = project.task('resolveJobDslExtensions', type: Copy) {
-            from project.configurations.jobDslExtension
-            into project.file("${project.buildDir}/resolveJobDslExtensions/test-dependencies")
+        Task resolveJenkinsPlugins = project.task('resolveJenkinsPlugins', type: Copy) {
+            from project.configurations.jenkinsPlugin
+            into project.file("${project.buildDir}/resolveJenkinsPlugins/test-dependencies")
             include '*.hpi'
             include '*.jpi'
             def mapping = [:]
 
             doFirst {
-                project.configurations.jobDslExtension.resolvedConfiguration.resolvedArtifacts.each {
+                project.configurations.jenkinsPlugin.resolvedConfiguration.resolvedArtifacts.each {
                     mapping[it.file.name] = "${it.name}.${it.extension}"
                 }
             }
@@ -141,13 +145,13 @@ class JobDslPlugin implements Plugin<Project> {
             }
         }
 
-        Task jobDslTest = project.task('jobDslTest', type: Test, dependsOn: [unpackDslTests, resolveJobDslExtensions]) {
+        Task jobDslTest = project.task('jobDslTest', type: Test, dependsOn: [unpackDslTests, resolveJenkinsPlugins]) {
             description = 'Executes all Job DSL scripts to test for errors'
             group = 'Verification'
 
             classpath = project.sourceSets.main.runtimeClasspath +
                     project.configurations.jobDslTestRuntime +
-                    project.files("${project.buildDir}/resolveJobDslExtensions")
+                    project.files("${project.buildDir}/resolveJenkinsPlugins")
 
             testClassesDir = project.file(jobDslTestsDir)
         }
