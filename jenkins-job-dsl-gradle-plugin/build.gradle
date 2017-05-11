@@ -35,6 +35,10 @@ task generateResources {
     def dir = project.file("${generatedResourcesDir}/com/aoe/gradle/jenkinsjobdsl")
     def file = project.file("${dir}/dependencyVersions.properties")
 
+    inputs.property('projectversion', project.version.toString())
+    inputs.property('version.jobDsl', versions.jobDsl)
+    inputs.property('version.groovy', versions.groovy)
+    inputs.property('version.spock', versions.spock)
     outputs.files file
 
     doLast {
