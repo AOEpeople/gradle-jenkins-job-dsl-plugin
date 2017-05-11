@@ -5,7 +5,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.netflix.nebula:nebula-publishing-plugin:4.4.4'
-        classpath 'com.netflix.nebula:nebula-release-plugin:3.1.0'
+        classpath 'com.netflix.nebula:nebula-release-plugin:5.0.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.4'
     }
 }
@@ -38,4 +38,11 @@ subprojects {
 }
 
 //tasks.release.finalizedBy subprojects.collect { it.tasks.bintrayUpload }
-tasks.release.finalizedBy ':jenkins-job-dsl-test-support:bintrayUpload', ':jenkins-job-dsl-gradle-plugin:publishPlugins'
+//tasks.release.finalizedBy ':jenkins-job-dsl-test-support:bintrayUpload', ':jenkins-job-dsl-gradle-plugin:publishPlugins'
+
+tasks.release.dependsOn subprojects.collect { it.tasks.check }
+
+if (ext.has('release.stage') && ext.get('release.stage') in ['dev', 'SNAPSHOT']) {
+    rootProject.tasks.postRelease.dependsOn subprojects.collect { it.tasks.publishToMavenLocal }
+}
+

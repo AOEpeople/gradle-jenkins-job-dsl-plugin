@@ -20,3 +20,9 @@ group = 'com.aoe.gradle'
 test {
     systemProperties(jobSourceDirs: 'src/testjobs')
 }
+
+tasks.bintrayUpload.mustRunAfter rootProject.tasks.release
+
+if (ext.has('release.stage') && ext.get('release.stage') in ['rc', 'final']) {
+    rootProject.tasks.postRelease.dependsOn tasks.bintrayUpload
+}
