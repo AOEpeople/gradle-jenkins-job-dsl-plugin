@@ -1,3 +1,9 @@
+= 2.0.0 (2017-05-11)
+- Removed `run`, `runAll` tasks and renamed `testDsl` to `jobDslTests`
+- Changed test execution mechanism to use a Jenkins test harness
+- Support most recent Job DSL version (1.63)
+- Publish plugin to Gradle Plugin Portal
+
 = 1.4.2 (2016-03-31)
 - Fix for changed ctor in Runner
 
