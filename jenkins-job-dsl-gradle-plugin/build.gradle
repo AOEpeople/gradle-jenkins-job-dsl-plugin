@@ -80,5 +80,5 @@ test.dependsOn ":jenkins-job-dsl-test-support:publishToMavenLocal"
 tasks.publishPlugins.mustRunAfter rootProject.tasks.release
 
 if (ext.has('release.stage') && ext.get('release.stage') in ['rc', 'final']) {
-    rootProject.tasks.postRelease.dependsOn tasks.publishPlugins
+    rootProject.tasks.postRelease.dependsOn tasks.publishPlugins, tasks.bintrayUpload
 }
