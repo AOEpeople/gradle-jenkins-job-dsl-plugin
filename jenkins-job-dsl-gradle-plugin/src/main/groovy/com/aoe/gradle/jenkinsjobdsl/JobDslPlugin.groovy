@@ -119,7 +119,11 @@ class JobDslPlugin implements Plugin<Project> {
             rename { mapping[it] }
 
             doLast {
-                List<String> baseNames = source*.name.collect { mapping[it] }.collect { it[0..it.lastIndexOf('.') - 1] }
+                def mappedName = source*.name.collect { sourceFileName ->
+                    // direct file dependencies don't have mapping
+                    mapping[sourceFileName] ?: sourceFileName
+                }
+                List<String> baseNames = mappedName.collect { it[0..it.lastIndexOf('.') - 1] }
                 new File(destinationDir, 'index').setText(baseNames.join('\n'), 'UTF-8')
             }
         }

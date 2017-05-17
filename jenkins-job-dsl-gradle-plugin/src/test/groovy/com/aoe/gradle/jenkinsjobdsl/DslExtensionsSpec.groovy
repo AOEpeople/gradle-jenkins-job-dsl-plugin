@@ -10,18 +10,9 @@ import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
 /**
  * @author Carsten Lenz, AOE
  */
-class DslExtensionsSpec extends Specification {
-
-//    @Rule
-    final TemporaryFolder testProjectDir = new TemporaryFolder(new File('build'))
-
-    File buildFile
-    File jobsDir
+class DslExtensionsSpec extends AbstractGradleProjectSpec {
 
     def setup() {
-        testProjectDir.create()
-        buildFile = testProjectDir.newFile('build.gradle')
-        jobsDir = testProjectDir.newFolder('src', 'jobs')
         def sample = new File(jobsDir, 'sample.groovy')
         sample << """
 

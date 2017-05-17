@@ -10,16 +10,9 @@ import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
 /**
  * @author Carsten Lenz, AOE
  */
-class EnvironmentPassingSpec extends Specification {
-    @Rule
-    final TemporaryFolder testProjectDir = new TemporaryFolder()
-
-    File buildFile
-    File jobsDir
+class EnvironmentPassingSpec extends AbstractGradleProjectSpec {
 
     def setup() {
-        buildFile = testProjectDir.newFile('build.gradle')
-        jobsDir = testProjectDir.newFolder('src', 'jobs')
         def sample = new File(jobsDir, 'sample.groovy')
         sample << """
 
