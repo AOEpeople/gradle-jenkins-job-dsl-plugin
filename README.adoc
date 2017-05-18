@@ -12,6 +12,7 @@ and tries to create a plugin for automatically applying the functionality of it
 * Local tests of DSL scripts
 ** Ensures DSL scripts execute without error
 ** Supports external Job DSL extensions from Jenkins plugins
+** Supports the Generated DSL feature
 * Local generation of Jenkins config XML files for debugging
 * Support for external library dependencies for use in your DSL scripts
 
@@ -23,7 +24,7 @@ Using the Plugin DSL:
 .build.gradle
 ----
 plugins {
-    id 'com.aoe.jenkins-job-dsl' version '2.0.1'
+    id 'com.aoe.jenkins-job-dsl' version '2.1.0'
 }
 ----
 
@@ -39,7 +40,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath "gradle.plugin.gradle-jenkins-job-dsl-plugin:jenkins-job-dsl-gradle-plugin:2.0.1"
+    classpath "gradle.plugin.gradle-jenkins-job-dsl-plugin:jenkins-job-dsl-gradle-plugin:2.1.0"
   }
 }
 
@@ -54,8 +55,12 @@ apply plugin: "com.aoe.jenkins-job-dsl"
 ----
 
 dependencies {
-    // Example for using additional Jenkins plugins that provide their own Job DSL support:
+    // Example for using additional Jenkins plugins that provide their own
+    // Job DSL support or to use them with the Generated DSL feature:
     jenkinsPlugin 'com.aoe.jenkins:scm-push-trigger:1.1.0'
+
+    // for special cases: declare a Jenkins plugin as file dependency:
+    jenkinsPlugin files('plugins/my-jenkins-plugin.jpi')
 
     // Example for using external libraries in the DSL scripts themselves:
     compile 'com.google.guava:guava:18.0'
