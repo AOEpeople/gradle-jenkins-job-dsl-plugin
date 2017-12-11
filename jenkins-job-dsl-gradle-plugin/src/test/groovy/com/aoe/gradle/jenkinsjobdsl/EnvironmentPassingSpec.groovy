@@ -34,8 +34,6 @@ job("simple-job") {
 
         repositories {
             mavenLocal()
-            mavenCentral()
-            jcenter()
         }
 
         jobDsl {

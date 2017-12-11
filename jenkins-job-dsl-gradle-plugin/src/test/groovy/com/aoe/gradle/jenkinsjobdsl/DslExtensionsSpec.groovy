@@ -55,8 +55,6 @@ job("\$basePath/grails-example-build") {
 
         repositories {
             mavenLocal()
-            mavenCentral()
-            jcenter()
         }
         
         dependencies {
