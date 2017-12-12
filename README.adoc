@@ -24,7 +24,7 @@ Using the Plugin DSL:
 .build.gradle
 ----
 plugins {
-    id 'com.aoe.jenkins-job-dsl' version '2.1.0'
+    id 'com.aoe.jenkins-job-dsl' version '2.2.0'
 }
 ----
 
@@ -40,7 +40,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath "gradle.plugin.gradle-jenkins-job-dsl-plugin:jenkins-job-dsl-gradle-plugin:2.1.0"
+    classpath "gradle.plugin.gradle-jenkins-job-dsl-plugin:jenkins-job-dsl-gradle-plugin:2.2.0"
   }
 }
 
@@ -76,7 +76,7 @@ jobDsl {
     // Version of Job DSL you want to use
     version = '1.63' // default
 
-    // By default jcenter and jenkins-release are added as repositories
+    // By default jcenter and jenkins-public are added as repositories
     // If you don't like this set it to false
     addRepositories = true // default
 }
