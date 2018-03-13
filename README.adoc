@@ -123,7 +123,7 @@ in Jenkins (e.g. `lib/*.jar`) - see below.
 
 * `gradlew build` - Compile code in `src/main/groovy`, execute (job-dsl) tests and copy
   compile dependencies into `lib` folder (calls `libs` task)
-* `gradlew jobDslTests` - Executes all DSL scripts to ensure no error. If everything
+* `gradlew jobDslTest` - Executes all DSL scripts to ensure no error. If everything
   is fine Gradle will say `BUILD SUCCESSFUL`. Otherwise open the test report
   from `build/reports/test/index.html`.
   The generated config xml files are located in `build/debug-xml/<jobs|views>` for inspection
