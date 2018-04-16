@@ -6,6 +6,7 @@ import hudson.model.View
 import javaposse.jobdsl.dsl.*
 import javaposse.jobdsl.plugin.JenkinsJobManagement
 import jenkins.model.Jenkins
+import org.apache.commons.io.FilenameUtils
 import org.junit.ClassRule
 import org.jvnet.hudson.test.JenkinsRule
 import spock.lang.Shared
@@ -47,6 +48,9 @@ class JobScriptsSpec extends Specification {
         given:
         JobManagement jm = new JenkinsJobManagement(System.out, [*: System.getenv()], new File('.'))
 
+        expect:
+        assertValidFilename(file)
+
         when:
         GeneratedItems items = new DslScriptLoader(jm).runScript(file.text)
         writeItems items
@@ -56,7 +60,6 @@ class JobScriptsSpec extends Specification {
 
         where:
         file << jobFiles
-
     }
 
     static List<File> getJobFiles() {
@@ -101,6 +104,28 @@ class JobScriptsSpec extends Specification {
 
         File xmlFile = new File(folderDir, "${tokens[-1]}.xml")
         xmlFile.text = xml
+    }
+
+    /**
+     * Check if script name is valid according to Java conventions
+     *
+     * @param fileName
+     * @return
+     */
+    protected static void assertValidFilename(File fileName) {
+        boolean result = true
+        String normalizedName = FilenameUtils.removeExtension(fileName.getName())
+        if (normalizedName.length() == 0 || !Character.isJavaIdentifierStart(normalizedName.charAt(0))) {
+            result = false
+        }
+        for (int i = 1; i < normalizedName.length(); i += 1) {
+            if (!Character.isJavaIdentifierPart(normalizedName.charAt(i))) {
+                result = false
+            }
+        }
+
+        assert result, "invalid script name '${fileName}; script names may only contain " +
+            'letters, digits and underscores, but may not start with a digit'
     }
 }
 
