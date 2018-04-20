@@ -1,11 +1,13 @@
 package com.aoe.gradle.jenkinsjobdsl
 
+import org.gradle.testkit.runner.GradleRunner
+
 import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
 
 /**
  * @author Carsten Lenz, AOE
  */
-class DslExtensionsSpec extends AbstractGradleProjectSpec {
+class CustomJobDslClassSpec extends AbstractGradleProjectSpec {
 
     def setup() {
         def sample = new File(jobsDir, 'sample.groovy')
@@ -60,6 +62,7 @@ job("\$basePath/grails-example-build") {
 
         jobDsl {
             sourceDir 'src/jobs'
+            testClass 'com.testing.CustomSpec'
         }
         
         jobDslTest {
@@ -70,24 +73,30 @@ job("\$basePath/grails-example-build") {
             }
          }
         """.stripIndent()
-    }
 
-    def "printing dependencies"() {
-        when:
-        def result = createGradleRunner()
-                .withArguments('dependencies')
-                .build()
 
-        new File('build/dependencies.txt').text = result.output
-
-        then:
-        result.task(':dependencies').outcome == SUCCESS // it really should
+        def customSpecFolder = testProjectDir.newFolder('src', 'jobDslTest', 'groovy', 'com', 'testing')
+        def customSpec = new File(customSpecFolder, 'CustomSpec.groovy')
+        customSpec << """
+        package com.testing
+        
+        import com.aoe.gradle.jenkinsjobdsl.*
+        
+        class CustomSpec extends AbstractJobDslSpec implements SystemPropertyInputs {
+            def "all is good"() {
+                when:
+                def nothing = ""
+                then:
+                noExceptionThrown()
+            }
+        }
+        """.stripIndent()
     }
 
     def "executing jobDslTest"() {
         when:
         def result = createGradleRunner()
-                .withArguments('jobDslTest')
+                .withArguments('jobDslTest', '--stacktrace')
                 .build()
 
         then:

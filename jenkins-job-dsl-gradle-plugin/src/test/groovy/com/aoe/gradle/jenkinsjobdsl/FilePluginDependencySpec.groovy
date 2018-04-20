@@ -1,7 +1,5 @@
 package com.aoe.gradle.jenkinsjobdsl
 
-import org.gradle.testkit.runner.GradleRunner
-
 import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
 
 /**
@@ -39,10 +37,8 @@ class FilePluginDependencySpec extends AbstractGradleProjectSpec {
 
     def "resolve file plugin dependencies"() {
         when:
-        def result = GradleRunner.create()
-                .withProjectDir(testProjectDir.root)
+        def result = createGradleRunner()
                 .withArguments('resolveJenkinsPlugins')
-                .withPluginClasspath()
                 .build()
 
         def depFolder = new File(testProjectDir.root, 'build/resolveJenkinsPlugins/test-dependencies')

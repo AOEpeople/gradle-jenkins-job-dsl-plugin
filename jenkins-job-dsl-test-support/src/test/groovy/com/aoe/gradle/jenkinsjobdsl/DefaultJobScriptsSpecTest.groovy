@@ -6,7 +6,7 @@ import spock.lang.Unroll
 /**
  * @author Carsten Lenz, AOE
  */
-class JobScriptsSpecTest extends Specification {
+class DefaultJobScriptsSpecTest extends Specification {
 
     @Unroll
     void 'test isValidScriptName'() {
@@ -15,7 +15,7 @@ class JobScriptsSpecTest extends Specification {
 
         when:
         try {
-            JobScriptsSpec.assertValidFilename(filename)
+            AbstractJobDslSpec.assertValidFilename(filename)
         } catch (AssertionError e) {
             exceptionThrown = true
         }
