@@ -11,6 +11,7 @@ and tries to create a plugin for automatically applying the functionality of it
 
 * Local tests of DSL scripts
 ** Ensures DSL scripts execute without error
+** Ensures DSL script file names are valid
 ** Supports external Job DSL extensions from Jenkins plugins
 ** Supports the Generated DSL feature
 * Local generation of Jenkins config XML files for debugging
@@ -24,7 +25,7 @@ Using the Plugin DSL:
 .build.gradle
 ----
 plugins {
-    id 'com.aoe.jenkins-job-dsl' version '2.2.0'
+    id 'com.aoe.jenkins-job-dsl' version '2.3.0'
 }
 ----
 

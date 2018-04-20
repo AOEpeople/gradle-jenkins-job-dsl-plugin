@@ -1,3 +1,9 @@
+= 2.3.0 (2018-04-20)
+- jobDslTest task now checks the validity of script filenames (thanks @tomasnorre)
+
+= 2.2.0 (2017-12-12)
+- Workaround for incomplete artifacts in Jenkins repository
+
 = 2.1.0 (2017-05-18)
 - Support for declaring Jenkins plugins as file dependencies
 
