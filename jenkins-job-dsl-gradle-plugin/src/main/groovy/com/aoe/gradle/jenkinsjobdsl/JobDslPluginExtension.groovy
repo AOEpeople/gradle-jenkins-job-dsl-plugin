@@ -35,6 +35,12 @@ class JobDslPluginExtension {
      */
     Boolean addRepositories = true
 
+    /**
+     * The test class to be executed when running `jobDslTest`
+     * Default: 'com.aoe.gradle.jenkinsjobdsl.DefaultJobScriptsSpec'
+     */
+    String testClass = 'com.aoe.gradle.jenkinsjobdsl.DefaultJobScriptsSpec'
+
     void version(String version) {
         this.version = version
     }

@@ -1,5 +1,6 @@
 package com.aoe.gradle.jenkinsjobdsl
 
+import org.gradle.testkit.runner.GradleRunner
 import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
 
@@ -21,5 +22,12 @@ class AbstractGradleProjectSpec extends Specification {
 
     def cleanup() {
 
+    }
+
+    GradleRunner createGradleRunner() {
+        GradleRunner.create()
+                .withGradleVersion('4.0')
+                .withProjectDir(testProjectDir.root)
+                .withPluginClasspath()
     }
 }

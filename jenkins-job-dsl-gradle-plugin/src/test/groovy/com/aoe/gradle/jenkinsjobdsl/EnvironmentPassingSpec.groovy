@@ -1,10 +1,5 @@
 package com.aoe.gradle.jenkinsjobdsl
 
-import org.gradle.testkit.runner.GradleRunner
-import org.junit.Rule
-import org.junit.rules.TemporaryFolder
-import spock.lang.Specification
-
 import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
 
 /**
@@ -47,14 +42,11 @@ job("simple-job") {
 
     def "executing jobDslTest"() {
         when:
-        def result = GradleRunner.create()
-                .withProjectDir(testProjectDir.root)
+        def result = createGradleRunner()
                 .withArguments('jobDslTest')
-                .withPluginClasspath()
                 .build()
 
         then:
-//        result.output.contains('')
         result.task(':jobDslTest').outcome == SUCCESS
     }
 

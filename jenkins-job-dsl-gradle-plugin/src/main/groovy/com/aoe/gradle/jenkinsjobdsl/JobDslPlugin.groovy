@@ -6,8 +6,6 @@ import org.gradle.api.Task
 import org.gradle.api.artifacts.ResolvedArtifact
 import org.gradle.api.artifacts.ResolvedDependency
 import org.gradle.api.tasks.Copy
-import org.gradle.api.tasks.JavaExec
-import org.gradle.api.tasks.StopExecutionException
 import org.gradle.api.tasks.testing.Test
 
 /**
@@ -29,51 +27,16 @@ class JobDslPlugin implements Plugin<Project> {
         def extension = project.extensions.create('jobDsl', JobDslPluginExtension)
         extension.version Versions.jobDsl
 
-        configureDependencies(project)
+        addSourceSets(project)
 
-        addJobSourceSet(project)
+        configureDependencies(project)
 
         addTestDslTask(project)
 
         addDependenciesManifestationTasks(project)
     }
 
-    void configureDependencies(Project project) {
-
-        project.configurations {
-            jenkinsPlugin
-            jobDslTestSupport
-            jobDslTestRuntime.extendsFrom(jobDslTestSupport)
-        }
-
-        project.dependencies {
-            provided "org.codehaus.groovy:groovy-all:${Versions.groovy}"
-            jobDslTestSupport "com.aoe.gradle:jenkins-job-dsl-test-support:${Versions.pluginVersion}"
-        }
-
-        project.afterEvaluate { proj ->
-            def extension = proj.extensions.getByType(JobDslPluginExtension)
-
-            proj.dependencies {
-                provided "org.jenkins-ci.plugins:job-dsl-core:${extension.version}"
-
-                // Sadly because of the .hpi or .jpi pom packages we have to redundantly define the correct job-dsl deps
-                jobDslTestRuntime "org.jenkins-ci.plugins:job-dsl:${extension.version}@jar"
-                jobDslTestRuntime "org.jenkins-ci.plugins:job-dsl:${extension.version}"
-                jobDslTestRuntime 'org.jenkins-ci.plugins:structs:1.6@jar'
-                jobDslTestRuntime 'org.jenkins-ci.plugins:cloudbees-folder:6.0.4@jar'
-            }
-
-            if (extension.addRepositories) {
-                proj.repositories {
-                    maven { url 'http://repo.jenkins-ci.org/public' }
-                    jcenter()
-                }
-            }
-        }
-    }
-
-    def addJobSourceSet(Project project) {
+    def addSourceSets(Project project) {
         project.sourceSets {
             jobs {
                 groovy {
@@ -82,6 +45,7 @@ class JobDslPlugin implements Plugin<Project> {
                 compileClasspath += project.sourceSets.main.output
                 runtimeClasspath += project.sourceSets.main.output
             }
+            jobDslTest {}
         }
 
         project.afterEvaluate { proj ->
@@ -98,6 +62,41 @@ class JobDslPlugin implements Plugin<Project> {
                             srcDir dir
                         }
                     }
+                }
+            }
+        }
+    }
+
+    void configureDependencies(Project project) {
+
+        project.configurations {
+            jenkinsPlugin
+            jobDslTestSupport
+            jobDslTestCompile.extendsFrom(jobDslTestSupport)
+        }
+
+        project.dependencies {
+            provided "org.codehaus.groovy:groovy-all:${Versions.groovy}"
+            jobDslTestSupport "com.aoe.gradle:jenkins-job-dsl-test-support:${Versions.pluginVersion}"
+        }
+
+        project.afterEvaluate { proj ->
+            def extension = proj.extensions.getByType(JobDslPluginExtension)
+
+            proj.dependencies {
+                provided "org.jenkins-ci.plugins:job-dsl-core:${extension.version}"
+
+                // Sadly because of the .hpi or .jpi pom packages we have to redundantly define the correct job-dsl deps
+                jobDslTestCompile "org.jenkins-ci.plugins:job-dsl:${extension.version}@jar"
+                jobDslTestCompile "org.jenkins-ci.plugins:job-dsl:${extension.version}"
+                jobDslTestCompile 'org.jenkins-ci.plugins:structs:1.6@jar'
+                jobDslTestCompile 'org.jenkins-ci.plugins:cloudbees-folder:6.0.4@jar'
+            }
+
+            if (extension.addRepositories) {
+                proj.repositories {
+                    maven { url 'http://repo.jenkins-ci.org/public' }
+                    jcenter()
                 }
             }
         }
@@ -149,15 +148,18 @@ class JobDslPlugin implements Plugin<Project> {
             }
         }
 
-        Task jobDslTest = project.task('jobDslTest', type: Test, dependsOn: [unpackDslTests, resolveJenkinsPlugins]) {
+        Task jobDslTest = project.task('jobDslTest', type: Test) {
+            dependsOn unpackDslTests, resolveJenkinsPlugins, 'jobDslTestClasses'
             description = 'Executes all Job DSL scripts to test for errors'
             group = 'Verification'
 
             classpath = project.sourceSets.main.runtimeClasspath +
-                    project.configurations.jobDslTestRuntime +
+                    project.sourceSets.jobDslTest.runtimeClasspath +
                     project.files("${project.buildDir}/resolveJenkinsPlugins")
 
-            testClassesDir = project.file(jobDslTestsDir)
+            testClassesDirs = project.files(
+                    jobDslTestsDir,
+                    project.sourceSets.jobDslTest.output.classesDirs)
         }
 
         project.afterEvaluate { proj ->
@@ -167,11 +169,12 @@ class JobDslPlugin implements Plugin<Project> {
                     inputs.dir dir
                 }
                 systemProperties([
-                        jobSourceDirs: extension.sourceDirs.join(File.pathSeparator),
+                        jobSourceDirs  : extension.sourceDirs.join(File.pathSeparator),
                         jobResourceDirs: extension.resourceDirs.join(File.pathSeparator),
                         // set build directory for Jenkins test harness, JENKINS-26331
-                        buildDirectory: proj.buildDir.absolutePath
+                        buildDirectory : proj.buildDir.absolutePath
                 ])
+                include extension.testClass.replace('.', '/') + '.class'
             }
         }
 

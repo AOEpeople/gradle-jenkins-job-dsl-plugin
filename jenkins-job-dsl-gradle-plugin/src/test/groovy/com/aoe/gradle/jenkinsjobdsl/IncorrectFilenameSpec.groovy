@@ -1,9 +1,6 @@
 package com.aoe.gradle.jenkinsjobdsl
 
-import org.gradle.testkit.runner.GradleRunner
-
 import static org.gradle.testkit.runner.TaskOutcome.FAILED
-import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
 
 /**
  * @author Tomas Norre Mikkelsen
@@ -49,10 +46,8 @@ job("1-job-with-digit") {
 
     def "executing jobDslTest"() {
         when:
-        def result = GradleRunner.create()
-                .withProjectDir(testProjectDir.root)
+        def result = createGradleRunner()
                 .withArguments('jobDslTest')
-                .withPluginClasspath()
                 .buildAndFail()
 
         then:
