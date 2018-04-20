@@ -6,7 +6,7 @@ import static org.gradle.testkit.runner.TaskOutcome.FAILED
 import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
 
 /**
- * @author Carsten Lenz, AOE
+ * @author Tomas Norre Mikkelsen
  */
 class IncorrectFilenameSpec extends AbstractGradleProjectSpec {
 
