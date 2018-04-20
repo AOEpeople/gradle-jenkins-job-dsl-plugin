@@ -9,6 +9,8 @@ dependencies {
     compile "org.jenkins-ci.main:jenkins-war:${versions.jenkins}"
     compile "org.jenkins-ci.main:jenkins-war:${versions.jenkins}:war-for-test@jar"
 
+    compile 'commons-io:commons-io:2.4'
+
     // needed optional dependency of of jenkins-core
     compile 'javax.servlet:servlet-api:2.4'
 }
