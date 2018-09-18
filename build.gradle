@@ -1,6 +1,7 @@
 
 buildscript {
     repositories {
+        maven { url 'http://repo.jenkins-ci.org/public' }
         jcenter()
     }
     dependencies {
