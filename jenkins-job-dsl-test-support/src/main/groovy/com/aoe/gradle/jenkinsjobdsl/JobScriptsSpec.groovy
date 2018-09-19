@@ -94,8 +94,8 @@ class JobScriptsSpec extends Specification {
     }
 
     private View getView(String viewName){
-        viewGroup = jenkinsRule.jenkins
-        viewName.split("/").dropRight(1).each { folderName ->
+        def viewGroup = jenkinsRule.jenkins
+        for (folderName in viewName.split("/").dropRight(1)) {
             viewGroup = viewGroup.getItem(folderName)
         }
 

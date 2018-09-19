@@ -11,8 +11,6 @@ dependencies {
 
     compile 'commons-io:commons-io:2.4'
 
-    compile 'org.jenkins-ci.plugins:cloudbees-folder:6.1.2@jar'
-
     // needed optional dependency of of jenkins-core
     compile 'javax.servlet:servlet-api:2.4'
 }
