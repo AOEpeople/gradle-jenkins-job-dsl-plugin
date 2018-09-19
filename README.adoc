@@ -25,7 +25,7 @@ Using the Plugin DSL:
 .build.gradle
 ----
 plugins {
-    id 'com.aoe.jenkins-job-dsl' version '2.3.0'
+    id 'com.aoe.jenkins-job-dsl' version '2.4.0'
 }
 ----
 
@@ -41,7 +41,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath "gradle.plugin.gradle-jenkins-job-dsl-plugin:jenkins-job-dsl-gradle-plugin:2.2.0"
+    classpath "gradle.plugin.gradle-jenkins-job-dsl-plugin:jenkins-job-dsl-gradle-plugin:2.4.0"
   }
 }
 

@@ -1,3 +1,6 @@
+= 2.4.0 (2018-09-19)
+- Fix NPE when using the folders plugin and creating view in folders (contributed by @ajung)
+
 = 2.3.0 (2018-04-20)
 - jobDslTest task now checks the validity of script filenames (thanks @tomasnorre)
 
