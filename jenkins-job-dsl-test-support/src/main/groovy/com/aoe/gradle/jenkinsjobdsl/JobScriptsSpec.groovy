@@ -1,5 +1,6 @@
 package com.aoe.gradle.jenkinsjobdsl
 
+
 import groovy.io.FileType
 import hudson.model.Item
 import hudson.model.View
@@ -86,10 +87,19 @@ class JobScriptsSpec extends Specification {
 
         items.views.each { GeneratedView generatedView ->
             String viewName = generatedView.name
-            View view = jenkins.getView(viewName)
+            View view = getView(viewName)
             String text = new URL(jenkins.rootUrl + view.url + 'config.xml').text
             writeFile new File(outputDir, 'views'), viewName, text
         }
+    }
+
+    private View getView(String viewName){
+        def viewGroup = jenkinsRule.jenkins
+        for (folderName in viewName.split("/").dropRight(1)) {
+            viewGroup = viewGroup.getItem(folderName)
+        }
+
+        viewGroup.getView(viewName)
     }
 
     /**
