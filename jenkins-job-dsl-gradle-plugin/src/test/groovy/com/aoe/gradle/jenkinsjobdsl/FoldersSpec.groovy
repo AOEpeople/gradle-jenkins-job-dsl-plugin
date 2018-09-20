@@ -15,18 +15,14 @@ class FoldersSpec extends AbstractGradleProjectSpec {
         def sample = new File(jobsDir, 'views.groovy')
         sample << """
 
-listView("folder/tests") {
+folder("hamsdi")
+
+listView("hamsdi/bamsdi") {
     jobs {
         regex(".*tests.*")
     }
     columns {
         status()
-        weather()
-        name()
-        lastSuccess()
-        lastFailure()
-        lastDuration()
-        buildButton()
     }
 }
 """
@@ -40,22 +36,12 @@ listView("folder/tests") {
         }
         
         dependencies {
-            jenkinsPlugin 'org.jenkins-ci.plugins:ghprb:1.31.4'
-            jenkinsPlugin 'com.coravy.hudson.plugins.github:github:1.19.0'
             jenkinsPlugin 'org.jenkins-ci.plugins:cloudbees-folder:6.1.2'
         }
 
         jobDsl {
             sourceDir 'src/jobs'
         }
-        
-        jobDslTest {
-            doFirst {
-              classpath.each {
-                println "\${it.path}"
-              }
-            }
-         }
         """.stripIndent()
     }
 
