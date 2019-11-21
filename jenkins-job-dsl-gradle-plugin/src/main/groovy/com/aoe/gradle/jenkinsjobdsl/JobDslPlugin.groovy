@@ -156,8 +156,12 @@ class JobDslPlugin implements Plugin<Project> {
             classpath = project.sourceSets.main.runtimeClasspath +
                     project.configurations.jobDslTestRuntime +
                     project.files("${project.buildDir}/resolveJenkinsPlugins")
-
-            testClassesDir = project.file(jobDslTestsDir)
+            if (isGradleFiveOrGreater(project)) {
+                testClassesDirs = files(testClassesDir)
+            }
+            else {
+                testClassesDir = project.file(jobDslTestsDir)
+            }
         }
 
         project.afterEvaluate { proj ->
@@ -194,6 +198,10 @@ class JobDslPlugin implements Plugin<Project> {
 
     String prop(Project project, String property, String defaultValue = '') {
         project.hasProperty(property) ? project.getProperty(property) : defaultValue
+    }
+
+    boolean isGradleFiveOrGreater(Project project) {
+        project.properties.gradle.gradleVersion.compareTo('5.0.0') >= 0
     }
 }
 
