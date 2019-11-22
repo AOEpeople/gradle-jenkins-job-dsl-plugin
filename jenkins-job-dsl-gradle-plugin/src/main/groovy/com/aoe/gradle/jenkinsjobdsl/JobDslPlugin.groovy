@@ -175,7 +175,8 @@ class JobDslPlugin implements Plugin<Project> {
                         jobSourceDirs: extension.sourceDirs.join(File.pathSeparator),
                         jobResourceDirs: extension.resourceDirs.join(File.pathSeparator),
                         // set build directory for Jenkins test harness, JENKINS-26331
-                        buildDirectory: proj.buildDir.absolutePath
+                        buildDirectory: proj.buildDir.absolutePath,
+                        'jenkins.test.noSpaceInTmpDirs': 'true'
                 ])
             }
         }
