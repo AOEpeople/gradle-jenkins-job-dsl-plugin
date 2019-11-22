@@ -9,6 +9,7 @@ import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.StopExecutionException
 import org.gradle.api.tasks.testing.Test
+import org.gradle.util.VersionNumber
 
 /**
  * Gradle Plugin that sets up a project for authoring
@@ -157,7 +158,7 @@ class JobDslPlugin implements Plugin<Project> {
                     project.configurations.jobDslTestRuntime +
                     project.files("${project.buildDir}/resolveJenkinsPlugins")
             if (isGradleFiveOrGreater(project)) {
-                testClassesDirs = files(testClassesDir)
+                testClassesDirs = project.files(jobDslTestsDir)
             }
             else {
                 testClassesDir = project.file(jobDslTestsDir)
@@ -201,7 +202,8 @@ class JobDslPlugin implements Plugin<Project> {
     }
 
     boolean isGradleFiveOrGreater(Project project) {
-        project.properties.gradle.gradleVersion.compareTo('5.0.0') >= 0
+        println(project.gradle.gradleVersion)
+        VersionNumber.parse(project.gradle.gradleVersion) >= VersionNumber.parse("5.0.0")
     }
 }
 
