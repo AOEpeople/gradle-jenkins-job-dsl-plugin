@@ -41,10 +41,7 @@ job("\$basePath/grails-example-build") {
         }
     }
     steps {
-        grails {
-            useWrapper true
-            targets(['test-app', 'war'])
-        }
+        gradle 'assemble'
     }
 }
 """
@@ -60,7 +57,8 @@ job("\$basePath/grails-example-build") {
         dependencies {
             jenkinsPlugin 'org.jenkins-ci.plugins:ghprb:1.31.4'
             jenkinsPlugin 'com.coravy.hudson.plugins.github:github:1.19.0'
-            jenkinsPlugin 'org.jenkins-ci.plugins:cloudbees-folder:5.0'
+            jenkinsPlugin 'org.jenkins-ci.plugins:credentials:2.1.11'
+            jenkinsPlugin 'org.jenkins-ci.plugins:cloudbees-folder:6.1.2'
         }
 
         jobDsl {

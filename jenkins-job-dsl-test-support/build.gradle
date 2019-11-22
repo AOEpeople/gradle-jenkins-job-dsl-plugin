@@ -5,9 +5,8 @@ dependencies {
     compile "org.jenkins-ci.plugins:job-dsl:${versions.jobDsl}@jar"
     compile "org.spockframework:spock-core:${versions.spock}"
     //compile "org.jenkins-ci.main:jenkins-core:${versions.jenkins}"
-    compile 'org.jenkins-ci.main:jenkins-test-harness:2.17'
+    compile 'org.jenkins-ci.main:jenkins-test-harness:2.49'
     compile "org.jenkins-ci.main:jenkins-war:${versions.jenkins}"
-    compile "org.jenkins-ci.main:jenkins-war:${versions.jenkins}:war-for-test@jar"
 
     compile 'commons-io:commons-io:2.4'
 

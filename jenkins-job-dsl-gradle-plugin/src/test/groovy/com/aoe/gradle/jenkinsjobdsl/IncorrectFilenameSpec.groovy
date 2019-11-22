@@ -30,7 +30,7 @@ job("1-job-with-digit") {
         dependencies {
             jenkinsPlugin 'org.jenkins-ci.plugins:ghprb:1.31.4'
             jenkinsPlugin 'com.coravy.hudson.plugins.github:github:1.19.0'
-            jenkinsPlugin 'org.jenkins-ci.plugins:cloudbees-folder:5.0'
+            jenkinsPlugin 'org.jenkins-ci.plugins:cloudbees-folder:6.1.2'
         }
 
         jobDsl {
