@@ -4,9 +4,9 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.netflix.nebula:nebula-publishing-plugin:4.4.4'
-        classpath 'com.netflix.nebula:nebula-release-plugin:5.0.0'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.4'
+        classpath 'com.netflix.nebula:nebula-publishing-plugin:13.6.1'
+        classpath 'com.netflix.nebula:nebula-release-plugin:13.1.1'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
     }
 }
 
@@ -23,7 +23,7 @@ apply plugin: 'nebula.nebula-release'
 
 subprojects {
     apply plugin: 'groovy'
-    apply plugin: 'nebula.maven-base-publish'
+    apply plugin: 'nebula.maven-nebula-publish'
     apply plugin: 'nebula.javadoc-jar'
     apply plugin: 'nebula.source-jar'
     apply from: "${rootDir}/gradle/bintrayUpload.gradle"

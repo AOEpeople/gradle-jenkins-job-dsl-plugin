@@ -1,20 +1,20 @@
 
 dependencies {
-    compile "org.codehaus.groovy:groovy-all:${versions.groovy}"
-    compile "org.jenkins-ci.plugins:job-dsl:${versions.jobDsl}"
-    compile "org.jenkins-ci.plugins:job-dsl:${versions.jobDsl}@jar"
-    compile "org.spockframework:spock-core:${versions.spock}"
+    implementation "org.codehaus.groovy:groovy-all:${versions.groovy}"
+    implementation "org.jenkins-ci.plugins:job-dsl:${versions.jobDsl}"
+    implementation "org.jenkins-ci.plugins:job-dsl:${versions.jobDsl}@jar"
+    implementation "org.spockframework:spock-core:${versions.spock}"
     //compile "org.jenkins-ci.main:jenkins-core:${versions.jenkins}"
-    compile 'org.jenkins-ci.main:jenkins-test-harness:2.49'
-    compile "org.jenkins-ci.main:jenkins-war:${versions.jenkins}"
+    implementation 'org.jenkins-ci.main:jenkins-test-harness:2.49'
+    implementation "org.jenkins-ci.main:jenkins-war:${versions.jenkins}"
 
-    compile 'commons-io:commons-io:2.4'
+    implementation 'commons-io:commons-io:2.4'
 
     // needed optional dependency of of jenkins-core
-    compile 'javax.servlet:servlet-api:2.4'
+    implementation 'javax.servlet:servlet-api:2.4'
 }
 
-configurations.compile.all*.exclude module: 'groovy'
+configurations.implementation.all*.exclude module: 'groovy'
 
 group = 'com.aoe.gradle'
 

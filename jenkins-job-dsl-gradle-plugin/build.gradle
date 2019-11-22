@@ -5,7 +5,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath "com.gradle.publish:plugin-publish-plugin:0.9.7"
+        classpath "com.gradle.publish:plugin-publish-plugin:0.10.1"
     }
 }
 
@@ -13,10 +13,10 @@ apply plugin: 'java-gradle-plugin'
 apply plugin: 'com.gradle.plugin-publish'
 
 dependencies {
-    compile localGroovy()
-    compile 'com.netflix.nebula:gradle-extra-configurations-plugin:3.0.3'
+    implementation localGroovy()
+    implementation 'com.netflix.nebula:gradle-extra-configurations-plugin:3.0.3'
 
-    testCompile("org.spockframework:spock-core:${versions.spock}") {
+    testImplementation("org.spockframework:spock-core:${versions.spock}") {
         exclude module: 'groovy-all'
     }
 }

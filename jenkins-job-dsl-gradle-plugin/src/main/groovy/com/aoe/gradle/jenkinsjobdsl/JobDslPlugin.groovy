@@ -48,7 +48,7 @@ class JobDslPlugin implements Plugin<Project> {
         }
 
         project.dependencies {
-            provided "org.codehaus.groovy:groovy-all:${Versions.groovy}"
+            compileOnly "org.codehaus.groovy:groovy-all:${Versions.groovy}"
             jobDslTestSupport "com.aoe.gradle:jenkins-job-dsl-test-support:${Versions.pluginVersion}"
         }
 
@@ -140,7 +140,7 @@ class JobDslPlugin implements Plugin<Project> {
                 }
 
                 assert jarFiles.size() == 1, "The configuration 'jobDslTestSupport' is expected to have " +
-                        "only one artifact but has ${jarFiles.size()}. You should not modify this " +
+                        "exactly one artifact but has ${jarFiles.size()}. You should not modify this " +
                         "configuration. Please file a bug if you think this is an error."
 
                 project.copy {
