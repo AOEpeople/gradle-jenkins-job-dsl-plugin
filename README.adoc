@@ -75,7 +75,7 @@ jobDsl {
     resourceDir 'src/configs'
 
     // Version of Job DSL you want to use
-    version = '1.63' // default
+    version = '1.76' // default
 
     // By default jcenter and jenkins-public are added as repositories
     // If you don't like this set it to false

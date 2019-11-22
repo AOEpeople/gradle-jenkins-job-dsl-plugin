@@ -14,8 +14,8 @@ ext {
     versions = [:]
 }
 
-versions.jenkins = '2.14'
-versions.jobDsl = '1.63'
+versions.jenkins = '2.121'
+versions.jobDsl = '1.76'
 versions.groovy = '2.4.11'
 versions.spock = '1.1-groovy-2.4'
 
