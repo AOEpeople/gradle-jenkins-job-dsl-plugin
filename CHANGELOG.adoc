@@ -1,9 +1,9 @@
-= 2.7.0 (2019-11-22)
+= 2.8.0 (2019-11-22)
 - Support Gradle 4 to 6
 - Support Jenkins 2.121+
 - Support JobDSL 1.76
 
-= 2.5 & 2.6
+= 2.5 & 2.6 & 2.7
 Release automation failures
 
 = 2.4.0 (2018-09-19)
