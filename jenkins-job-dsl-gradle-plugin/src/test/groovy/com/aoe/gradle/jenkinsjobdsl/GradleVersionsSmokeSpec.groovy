@@ -48,6 +48,6 @@ job("simple-job") {
         result.task(':jobDslTest').outcome == SUCCESS
 
         where:
-        gradleVersion << ['4.10.3', '5.6.4', '6.0.1', '6.3']
+        gradleVersion << ['4.10.3', '6.3']
     }
 }
