@@ -42,12 +42,17 @@ class JobScriptsSpec extends Specification {
 
     def setupSpec() {
         outputDir.deleteDir()
+        if (RESOURCE_DIRS.size == 0) {
+            RESOURCE_DIRS.add(new File('.'))
+        } else if (RESOURCE_DIRS.size > 1) {
+            throw new Exception("More than one resource dir defined.")
+        }
     }
 
     @Unroll
     void 'test DSL script #file.name'(File file) {
         given:
-        JobManagement jm = new JenkinsJobManagement(System.out, [*: System.getenv()], new File('.'))
+        JobManagement jm = new JenkinsJobManagement(System.out, [*: System.getenv()], RESOURCE_DIRS[0])
 
         expect:
         assertValidFilename(file)
@@ -138,4 +143,3 @@ class JobScriptsSpec extends Specification {
             'letters, digits and underscores, but may not start with a digit'
     }
 }
-
