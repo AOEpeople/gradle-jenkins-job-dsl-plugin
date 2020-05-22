@@ -13,12 +13,14 @@ class AbstractGradleProjectSpec extends Specification {
     File buildFile
     File settingsFile
     File jobsDir
+    File resourcesDir
 
     def setup() {
         testProjectDir.create()
         buildFile = testProjectDir.newFile('build.gradle')
         settingsFile = testProjectDir.newFile('settings.gradle')
         jobsDir = testProjectDir.newFolder('src', 'jobs')
+        resourcesDir = testProjectDir.newFolder('src', 'resources')
     }
 
     def cleanup() {
