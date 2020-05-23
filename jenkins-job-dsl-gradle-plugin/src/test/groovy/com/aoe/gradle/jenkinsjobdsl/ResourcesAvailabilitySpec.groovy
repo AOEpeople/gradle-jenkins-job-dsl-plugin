@@ -2,12 +2,11 @@ package com.aoe.gradle.jenkinsjobdsl
 
 import org.gradle.testkit.runner.GradleRunner
 
-import static org.gradle.testkit.runner.TaskOutcome.FAILED
 import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
 
 /**
- * Test the Folder Support for Views
- * @author Axel Jung
+ * Test the availability of resources for reading from the workspace
+ * @author David Resnick
  */
 class ResourcesAvailabilitySpec extends AbstractGradleProjectSpec {
 
