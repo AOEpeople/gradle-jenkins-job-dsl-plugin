@@ -203,7 +203,6 @@ class JobDslPlugin implements Plugin<Project> {
     }
 
     boolean isGradleFiveOrGreater(Project project) {
-        println(project.gradle.gradleVersion)
         VersionNumber.parse(project.gradle.gradleVersion) >= VersionNumber.parse("5.0.0")
     }
 }
