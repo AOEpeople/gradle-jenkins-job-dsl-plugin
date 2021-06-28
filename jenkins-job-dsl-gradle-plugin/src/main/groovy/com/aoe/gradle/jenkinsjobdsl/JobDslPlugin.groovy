@@ -67,7 +67,7 @@ class JobDslPlugin implements Plugin<Project> {
 
             if (extension.addRepositories) {
                 proj.repositories {
-                    maven { url 'http://repo.jenkins-ci.org/public' }
+                    maven { url 'https://repo.jenkins-ci.org/public' }
                     jcenter()
                 }
             }
