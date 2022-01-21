@@ -29,7 +29,7 @@ subprojects {
     apply from: "${rootDir}/gradle/bintrayUpload.gradle"
 
     repositories {
-        maven { url 'http://repo.jenkins-ci.org/public' }
+        maven { url 'https://repo.jenkins-ci.org/public' }
         jcenter()
     }
 
